@@ -56,6 +56,6 @@ meshes[3].rotate([0.0, 0.5, 0.0], math.radians(90))
 # Translate 2 points over the Y axis
 meshes[3].y += 2
 
-# meshes[0].save('env/2Dto3D/output.stl')
+# meshes[0].save('STL Models/reference.stl')
 
 print(data['vectors'])
