@@ -1,0 +1,5 @@
+numpy==1.26.4
+numpy-stl==3.1.1
+opencv-contrib-python==4.9.0.80
+python-utils==3.8.2
+typing_extensions==4.9.0
