@@ -95,6 +95,44 @@ for x in range(rows):
                 zTR = wallHeight
         except IndexError:
             pass
+        
+        # determine z value of the bottom-left vertice (zBL)
+        try:
+            if y-1 < 0:
+                raise IndexError
+            if img[x+1,y-1] == 255:
+                zBL = wallHeight
+        except IndexError:
+            pass
+        try:
+            if img[x+1,y] == 255:
+                zBL = wallHeight
+        except IndexError:
+            pass
+        try:
+            if y-1 < 0:
+                raise IndexError
+            if img[x,y-1] == 255:
+                zBL = wallHeight
+        except IndexError:
+            pass
+
+        # determine z value of the bottom-right vertice (zBR)
+        try:
+            if img[x+1,y+1] == 255:
+                zBR = wallHeight
+        except IndexError:
+            pass
+        try:
+            if img[x+1,y] == 255:
+                zBR = wallHeight
+        except IndexError:
+            pass
+        try:
+            if img[x,y+1] == 255:
+                zBR = wallHeight
+        except IndexError:
+            pass
 
         # create the faces
         data['vectors'][i] = numpy.array([[x, y, zTL],
