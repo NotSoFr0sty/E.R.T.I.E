@@ -16,7 +16,7 @@ from stl import mesh
 import cv2 as cv
 
 # read floor plan in grayscale mode
-img = cv.imread('Floorplans/Output.png', cv.IMREAD_GRAYSCALE)
+img = cv.imread('Floorplans/TestFP.png', cv.IMREAD_GRAYSCALE)
 # cv.imshow('2D Input Floor Plan', img)
 # cv.waitKey(0)
 # cv.destroyAllWindows()
@@ -27,7 +27,7 @@ pixelCount = rows*cols
 
 # initialize 3D variables
 faceCount = pixelCount * 2
-wallHeight = 10
+wallHeight = 1
 data = numpy.zeros(faceCount, dtype=mesh.Mesh.dtype)
 
 # read floor plan pixel by pixel and create faces (2 faces per pixel, each face is a triangle)

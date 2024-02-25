@@ -15,7 +15,11 @@ import numpy as np
 img = np.zeros((3,3), dtype = np.int8)
 z = 5
 try:
-    temp = img[3,3]
+    if z>4:
+        raise IndexError
+    temp = img[2,2]
     print("Inside try block.")
 except IndexError:
     print("Inside except block.")
+
+print("After try-except block.")

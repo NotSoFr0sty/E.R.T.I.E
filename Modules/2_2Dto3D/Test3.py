@@ -27,16 +27,19 @@ pixelCount = rows*cols
 
 # initialize 3D variables
 faceCount = pixelCount * 2
-wallHeight = 10
+wallHeight = 1
 data = numpy.zeros(faceCount, dtype=mesh.Mesh.dtype)
 
 # read floor plan pixel by pixel and create faces (2 faces per pixel, each face is a triangle)
 i = 0
 for x in range(rows):
     for y in range(cols):
+        z=0
         # if pixel is white, then all vertices are at wallHeight (for the z value)
         if img[x,y] == 255:
             z = wallHeight
+
+            # create the faces
             data['vectors'][i] = numpy.array([[x, y, z],
                                             [x, y+1, z],
                                             [x+1, y, z]])
@@ -47,33 +50,45 @@ for x in range(rows):
             i+=1
             continue
         # else the pixel is black AND the z values for each vertice must be set according to the adjacent pixels
-        zTL = zTR = zBL = zBR = 0    
-        
+        zTL = zTR = zBL = zBR = 0
         # determine z value of the top-left vertice (zTL)
         # MAKE SURE X AND Y ARE GREATER THAN OR EQUAL TO ZERO BECAUSE NEGATIVE INDEX MEANS FROM THE REAR!!!
         try:
-            if x-1 < 0:
-                
-            temp = img[x-1,y-1]
+            if x-1 < 0 or y-1 < 0:
+                raise IndexError
             if img[x-1,y-1] == 255:
                 zTL = wallHeight
         except IndexError:
-            print("indexError found")
+            pass
         try:
+            if x-1 < 0:
+                raise IndexError
             if img[x-1,y] == 255:
                 zTL = wallHeight
         except IndexError:
-            print("indexError found")
+            pass
         try:
+            if y-1 < 0:
+                raise IndexError
             if img[x,y-1] == 255:
                 zTL = wallHeight
         except IndexError:
-            print("indexError found")
+            pass
+
+        # create the faces
+        data['vectors'][i] = numpy.array([[x, y, zTL],
+                                          [x, y+1, z],
+                                          [x+1, y, z]])
+        i+=1
+        data['vectors'][i] = numpy.array([[x, y+1, z],
+                                          [x+1, y+1, z],
+                                          [x+1, y, z]])
+        i+=1
 
 
 # create the 3D mesh
-# testMesh = mesh.Mesh(data)
-# testMesh.save('STL Models/Test3.stl')
+testMesh = mesh.Mesh(data)
+testMesh.save('STL Models/Test3.stl')
 
 
 
