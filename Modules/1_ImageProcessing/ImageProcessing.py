@@ -3,7 +3,7 @@ import numpy as np
 
 
 #read and display original floorplan in grayscale mode
-img = cv.imread('Floorplans/1.jpg', cv.IMREAD_GRAYSCALE)
+img = cv.imread('Floorplans/2.jpg', cv.IMREAD_GRAYSCALE)
 cv.imshow('Input Floorplan', img)
 
 #dilate image to remove text
