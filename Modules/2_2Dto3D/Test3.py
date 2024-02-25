@@ -76,7 +76,7 @@ for x in range(rows):
 
 # create the 3D mesh
 # testMesh = mesh.Mesh(data)
-# testMesh.save('STL Models/Test2.stl')
+# testMesh.save('STL Models/Test3.stl')
 
 
 
