@@ -52,11 +52,8 @@ for x in range(rows):
         # determine z value of the top-left vertice (zTL)
         # MAKE SURE X AND Y ARE GREATER THAN OR EQUAL TO ZERO BECAUSE NEGATIVE INDEX MEANS FROM THE REAR!!!
         try:
-            temp = img[3, 3]
-            print(temp)
-        except IndexError:
-            print("indexError found")
-        try:
+            if x-1 < 0:
+                
             temp = img[x-1,y-1]
             if img[x-1,y-1] == 255:
                 zTL = wallHeight
