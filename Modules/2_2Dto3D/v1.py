@@ -14,6 +14,7 @@ Save the mesh as an STL model
 import numpy
 from stl import mesh
 import cv2 as cv
+import math
 
 # read floor plan in grayscale mode
 img = cv.imread('Floorplans/Output.png', cv.IMREAD_GRAYSCALE)
@@ -148,8 +149,10 @@ for x in range(rows):
 
 
 # create the 3D mesh
-testMesh = mesh.Mesh(data)
-testMesh.save('STL Models/v1.stl')
+floorPlanMesh = mesh.Mesh(data)
+# rotate 90 degrees over the Z axis
+floorPlanMesh.rotate([0.0, 0.0, 0.5], math.radians(90))
+floorPlanMesh.save('STL Models/v1.stl')
 print("Done.")
 
 
