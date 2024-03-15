@@ -1,0 +1,14 @@
+Modules
+1. Image Processing
+2. 2D to 3D
+3. Pathfinding using A*
+    Result is a 2D image of the floor plan with the pathfinding overlayed on top.
+    Civillians should be able to click to place a marker for their current position in the building.
+    Emergency operators place markers for the Rescue Team in the same manner.
+    Pathfinding is done from Rescue Team (R) to Civillian (C).
+
+    For entry/exit AKA "Extraction," the path is calculated from (R) to outside the building. 
+        This can be done by calculating which border (top, right, bottom, or left) of the floor plan is closest to (R).
+
+4. Overlaying floor plan with the 3D Model
+    This is what we render and show to users.
