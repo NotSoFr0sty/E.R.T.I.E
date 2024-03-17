@@ -41,6 +41,14 @@ class Node:
         '''coords is a list of the form [x,y]'''
 
         self.coords = coords
+        self.f_cost = 1000000   # TEMPORARY, TRY REMOVING IT
+    
+    def __str__(self):
+        return ','.join(str(x) for x in self.coords)
+
+    def __lt__(self, other):
+        return self.f_cost < other.f_cost
+         
 
 # read testFP in grayscale mode
 img = cv.imread('Floorplans/testFP.png', cv.IMREAD_GRAYSCALE)
@@ -63,8 +71,13 @@ closed = []
 # add the start node to OPEN
 for node in nodes:
     if node.coords == start:
+        node.f_cost = 0
         open.append(node)
 
+# core loop
+# set current to the node in OPEN with the lowest f_cost. Here, sorted will sort by f_cost because __lt__ was manually defined to do so.
+current = sorted(open)[0]
+print(current)
 
 
 
