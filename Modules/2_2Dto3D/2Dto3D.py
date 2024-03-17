@@ -5,7 +5,7 @@ Set faceCount = total_no_of_pixels_of_floor_plan * 2
 Initialize a numpy zeros array, called data, with shape = faceCount
 Read the floor plan pixel by pixel
 Create 2 faces for each pixel (each face is made up of exactly 3 vertices)
-If the pixel is white, then set the faces’ Z values to wallHeight
+If the pixel is white, then set the faces' Z values to wallHeight
 Else set Z values to the default, 0
 Create the 3D mesh using mesh.Mesh(data)
 Save the mesh as an STL model
