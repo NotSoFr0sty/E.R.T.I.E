@@ -26,8 +26,8 @@ loop
 '''
 For Test1.py
 Open the testFP
-Start node is topLeft (top-most, left-most) pixel
-Goal node is bottomRight pixel
+Start node is top-left corner pixel
+Goal node is bottom-right corner pixel
 NOTE: Black means wall, white means floor
 '''
 
@@ -41,14 +41,49 @@ class Node:
         '''coords is a list of the form [x,y]'''
 
         self.coords = coords
-        self.f_cost = 1000000   # TEMPORARY, TRY REMOVING IT
+        self.xCoord = self.coords[0]
+        self.yCoord = self.coords[1]
+        self.f_cost = 1000000
     
     def __str__(self):
         return ','.join(str(x) for x in self.coords)
 
     def __lt__(self, other):
         return self.f_cost < other.f_cost
-         
+
+def findNodeHavingCoords(coords):
+    '''Returns the node in the list "nodes" which has the coordinates "coords." '''
+
+    for node in nodes:
+        if node.coords == coords:
+            return node
+
+def getNeighbors(centerNode):
+    '''Returns a list of adjacent nodes of the input node'''
+
+    neighbors = []
+    xCoord = centerNode.xCoord
+    yCoord = centerNode.yCoord
+    for node in nodes:
+        if node.xCoord == xCoord-1 and node.yCoord == yCoord: # top
+            neighbors.append(node)
+        if node.xCoord == xCoord-1 and node.yCoord == yCoord+1: # top right
+            neighbors.append(node)
+        if node.xCoord == xCoord and node.yCoord == yCoord+1: # right
+            neighbors.append(node)
+        if node.xCoord == xCoord+1 and node.yCoord == yCoord+1: # bottom right
+            neighbors.append(node)
+        if node.xCoord == xCoord+1 and node.yCoord == yCoord: # bottom
+            neighbors.append(node)
+        if node.xCoord == xCoord+1 and node.yCoord == yCoord-1: # bottom left
+            neighbors.append(node)
+        if node.xCoord == xCoord and node.yCoord == yCoord-1: # left
+            neighbors.append(node)
+        if node.xCoord == xCoord-1 and node.yCoord == yCoord-1: # top left
+            neighbors.append(node)
+    
+    return neighbors
+
 
 # read testFP in grayscale mode
 img = cv.imread('Floorplans/testFP.png', cv.IMREAD_GRAYSCALE)
@@ -63,22 +98,56 @@ for x in range(rows):
     for y in range(cols):
         newNode = Node([x,y])
         nodes.append(newNode)
-#         
+# set start node, goal node        
 start = [0,0]
 goal = [rows-1, cols-1]
 open = []
 closed = []
 # add the start node to OPEN
-for node in nodes:
-    if node.coords == start:
-        node.f_cost = 0
-        open.append(node)
+open.append(findNodeHavingCoords(start))
 
+pathFound = False
 # core loop
-# set current to the node in OPEN with the lowest f_cost. Here, sorted will sort by f_cost because __lt__ was manually defined to do so.
-current = sorted(open)[0]
-print(current)
+for i in range(1):
+    # set current to the node in OPEN with the lowest f_cost. Here, sorted will sort by f_cost because __lt__ was manually defined to do so.
+    current = sorted(open)[0]
+    # remove current from open
+    open.remove(current)
+    # add current to closed
+    closed.append(current)
 
+    # if current is the goal node, then the path has been found
+    if current.coords == goal:
+        pathFound = True
+        break
+
+    #calculate neighbors list (of current)
+    neighbors = getNeighbors(current)
+    for node in neighbors:
+        print(node)
+    # try:
+    #     if (current.coords[0]-1)<0:
+    #         raise IndexError
+    #     top = [current.coords[0]-1, current.coords[1]]
+    #     neighbors.append(findNodeHavingCoords(top))
+    # except IndexError:
+    #     pass
+    # try:
+    #     if (current.coords[0]-1)<0:
+    #         raise IndexError
+    #     topRight = [current.coords[0]-1, current.coords[1]+1]
+    #     neighbors.append(findNodeHavingCoords(topRight))
+    # except IndexError:
+    #     pass
+    # try:
+    #     Right = [current.coords[0], current.coords[1]+1]
+    #     neighbors.append(findNodeHavingCoords(Right))
+    # except IndexError:
+    #     pass
+    
+    # for each neighbor of the current node...
+    for node in neighbors:
+        pass
 
 
 # save test output image
