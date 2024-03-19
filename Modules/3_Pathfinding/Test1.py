@@ -18,8 +18,8 @@ loop
             skip to next neighbor
         
         if neighbor is not in OPEN || new path to neighbor is shorter
-            set f_cost of neighbor
-            set parent of neighbor to current
+            set parent of neighbor to current #I swapped this line and the next line.
+            set f_cost of neighbor #I swapped this line and the previous line.
             if neighbor is not in OPEN
                 add neighbor to OPEN
 '''
@@ -61,6 +61,44 @@ class Node:
     def setParent(self, parent):
         self.parent = parent
 
+    def calcAdjacencyToParent(self):
+        xCoord = self.xCoord
+        yCoord = self.yCoord
+        node = self.parent
+        if node.xCoord == xCoord-1 and node.yCoord == yCoord: # top
+            return '+'
+        if node.xCoord == xCoord-1 and node.yCoord == yCoord+1: # top right
+            return 'x'
+        if node.xCoord == xCoord and node.yCoord == yCoord+1: # right
+            return '+'
+        if node.xCoord == xCoord+1 and node.yCoord == yCoord+1: # bottom right
+            return 'x'
+        if node.xCoord == xCoord+1 and node.yCoord == yCoord: # bottom
+            return '+'
+        if node.xCoord == xCoord+1 and node.yCoord == yCoord-1: # bottom left
+            return 'x'
+        if node.xCoord == xCoord and node.yCoord == yCoord-1: # left
+            return '+'
+        if node.xCoord == xCoord-1 and node.yCoord == yCoord-1: # top left
+            return 'x'
+
+
+    def calcGCost(self):
+        adj = self.calcAdjacencyToParent()
+        if adj == '+':
+            self.gCost = 10 + self.parent.gCost
+        if adj == 'x':
+            self.gCost = 14 + self.parent.gCost
+
+    def calcHCost(self):
+        xCoord = self.xCoord
+        yCoord = self.yCoord
+        #TODO: complete this before all other TODOs!!!
+
+    def calcFCost(self):
+        self.calcGCost()
+        self.calcHCost()
+        self.fCost = self.gCost + self.hCost
 
 
 def findNodeHavingCoords(coords):
@@ -116,8 +154,12 @@ goal = [rows-1, cols-1]
 open = []
 closed = []
 # add the start node to OPEN
-open.append(findNodeHavingCoords(start))
-findNodeHavingCoords(start).setParent(findNodeHavingCoords(start)) # set the start node's parent to itself
+startNode = findNodeHavingCoords(start)
+open.append(startNode)
+startNode.setParent(startNode) # set the start node's parent to itself
+startNode.gCost = 0
+# set goal node
+goalNode = findNodeHavingCoords(goal)
 
 pathFound = False
 # core loop
@@ -145,11 +187,11 @@ for i in range(1): #TODO: set the proper range/condition
 
         # if neighbor is not in OPEN || new path to neighbor is shorter
         if neighbor not in open or isNewPathShorter(neighbor): #TODO: define this function
-            # set fCost of neighbor
-            neighbor.calcFCost() #TODO: define this function
-
             # set parent of neighbor to current
             neighbor.setParent(current)
+            
+            # set fCost of neighbor
+            neighbor.calcFCost()
 
             # if neighbor is not in OPEN
             if neighbor not in open:
