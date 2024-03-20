@@ -6,7 +6,7 @@ CLOSED //set of nodes already evaluated (potential path)
 add the start node to OPEN
 
 loop
-    current = node in OPEN with the lowest f_cost
+    current = node in OPEN with the lowest fCost
     remove current from OPEN
     add current to CLOSED
 
@@ -19,7 +19,7 @@ loop
         
         if neighbor is not in OPEN || new path to neighbor is shorter
             set parent of neighbor to current #I swapped this line and the next line.
-            set f_cost of neighbor #I swapped this line and the previous line.
+            set fCost of neighbor #I swapped this line and the previous line.
             if neighbor is not in OPEN
                 add neighbor to OPEN
 '''
@@ -44,13 +44,15 @@ class Node:
         self.xCoord = self.coords[0]
         self.yCoord = self.coords[1]
         self.pixelColor = img[self.xCoord, self.yCoord]
-        self.f_cost = 1000000
+        self.fCost = 1000000
     
     def __str__(self):
         return ','.join(str(x) for x in self.coords)
 
     def __lt__(self, other):
-        return self.f_cost < other.f_cost
+        '''Allows the sorted() function to sort nodes by fCost'''
+
+        return self.fCost < other.fCost
     
     def isTraversable(self):
         '''Returns True if the pixel corresponding to the node is white'''
@@ -62,6 +64,8 @@ class Node:
         self.parent = parent
 
     def calcAdjacencyToParent(self):
+        '''Returns 'x' if the node is diagonally adjacent to its parent, else returns '+' '''
+
         xCoord = self.xCoord
         yCoord = self.yCoord
         node = self.parent
@@ -84,6 +88,9 @@ class Node:
 
 
     def calcGCost(self):
+        '''Sets the gCost of the node.
+            A node's gCost is its distance from the start node.'''
+
         adj = self.calcAdjacencyToParent()
         if adj == '+':
             self.gCost = 10 + self.parent.gCost
@@ -91,11 +98,16 @@ class Node:
             self.gCost = 14 + self.parent.gCost
 
     def calcHCost(self):
+        '''Sets the nodes '''
+
         xCoord = self.xCoord
         yCoord = self.yCoord
         #TODO: complete this before all other TODOs!!!
 
     def calcFCost(self):
+        '''Sets the nodes fCost.
+            fCost = gCost + hCost'''
+
         self.calcGCost()
         self.calcHCost()
         self.fCost = self.gCost + self.hCost
@@ -164,7 +176,7 @@ goalNode = findNodeHavingCoords(goal)
 pathFound = False
 # core loop
 for i in range(1): #TODO: set the proper range/condition
-    # set current to the node in OPEN with the lowest f_cost. Here, sorted() will sort by f_cost because __lt__ was manually defined to do so.
+    # set current to the node in OPEN with the lowest fCost. Here, sorted() will sort by fCost because __lt__ was manually defined to do so.
     current = sorted(open)[0]
     # remove current from open
     open.remove(current)
@@ -196,6 +208,7 @@ for i in range(1): #TODO: set the proper range/condition
             # if neighbor is not in OPEN
             if neighbor not in open:
                 open.append(neighbor) # add neighbor to open
+else: print("ERROR: Path not found!")
 
 # save test output image
 cv.imwrite('Modules/3_Pathfinding/testOutput.png', img)
