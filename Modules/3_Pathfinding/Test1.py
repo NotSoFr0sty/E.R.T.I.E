@@ -241,5 +241,3 @@ if pathFound:
 
 # save test output image
 cv.imwrite('Modules/3_Pathfinding/testOutput.png', img)
-
-#TODO: create Test2.py and test the code using a 5x5 test floor plan before scaling up.
