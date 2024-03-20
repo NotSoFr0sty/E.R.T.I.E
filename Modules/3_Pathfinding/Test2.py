@@ -166,13 +166,32 @@ def isNewPathShorter(node, current):
     if newGCost < oldGCost:
         return True
 
-def printPath(coords):
-    '''Prints the path from the node with coordinates "coords" to the start node.'''
+def getPath(coords):
+    '''Returns a list with all nodes on the path.
+     The path is from the node with coordinates "coords" to the start node.'''
+    pathNodes = []
     node = findNodeHavingCoords(coords)
     while(node.parent != node):
-        print(node)
+        pathNodes.append(node)
         node = node.parent
-    print(node)
+    pathNodes.append(node)
+    return pathNodes
+
+def drawPath(nodes, img):
+    '''Draws a path on the input image and returns the resulting image.
+    All pixels that correspond to the nodes in the input list will be colored red.
+    '''
+    img = cv.cvtColor(img, cv.COLOR_GRAY2BGR)
+    for x in range(rows):
+        for y in range(cols):
+
+            for node in nodes:
+                if node.coords == [x,y]:
+                    # color that pixel red
+                    img[x,y] = [0,0,255]
+
+    return img
+
 
 # read testFP in grayscale mode
 img = cv.imread('Modules/3_Pathfinding/TestFP2.png', cv.IMREAD_GRAYSCALE)
@@ -200,7 +219,7 @@ startNode.gCost = 0
 
 pathFound = False
 # core loop
-for i in range(10): # just a hard limit for safety
+for i in range(100): # just a hard limit for safety
     # set current to the node in OPEN with the lowest fCost. Here, sorted() will sort by fCost because __lt__ was manually defined to do so.
     current = sorted(open)[0]
     # remove current from open
@@ -233,13 +252,14 @@ for i in range(10): # just a hard limit for safety
             # if neighbor is not in OPEN
             if neighbor not in open:
                 open.append(neighbor) # add neighbor to open
-else: print("ERROR: Path not found!") # runs if the for loop exits without touching a break statement
+else: # runs if the for loop exits without touching a break statement
+    print("ERROR: Path not found!")
+    raise SystemExit # terminate the code early
 
-if pathFound:
-    print('Path found.')
-    printPath(goal)
+# if the program hasn't terminated, then the path has surely been found.
+print('Path found.')
+pathNodes = getPath(goal)
+newImg = drawPath(pathNodes, img)
 
 # save test output image
-cv.imwrite('Modules/3_Pathfinding/TestOutput.png', img)
-
-#TODO: create Test2.py and test the code using a 5x5 test floor plan before scaling up.
+cv.imwrite('Modules/3_Pathfinding/TestOutput.png', newImg)
