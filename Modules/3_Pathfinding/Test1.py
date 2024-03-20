@@ -63,12 +63,12 @@ class Node:
     def setParent(self, parent):
         self.parent = parent
 
-    def calcAdjacencyToParent(self):
-        '''Returns 'x' if the node is diagonally adjacent to its parent, else returns '+' '''
+    def calcAdjacencyTo(self, tgtNode):
+        '''Returns 'x' if the node is diagonally adjacent to the target node, else returns '+' '''
 
         xCoord = self.xCoord
         yCoord = self.yCoord
-        node = self.parent
+        node = tgtNode
         if node.xCoord == xCoord-1 and node.yCoord == yCoord: # top
             return '+'
         if node.xCoord == xCoord-1 and node.yCoord == yCoord+1: # top right
@@ -88,21 +88,27 @@ class Node:
 
 
     def calcGCost(self):
-        '''Sets the gCost of the node.
-            A node's gCost is its distance from the start node.'''
+        '''Sets the node's gCost, which is the distance from the start node.'''
 
-        adj = self.calcAdjacencyToParent()
+        adj = self.calcAdjacencyTo(self.parent)
         if adj == '+':
             self.gCost = 10 + self.parent.gCost
         if adj == 'x':
             self.gCost = 14 + self.parent.gCost
 
     def calcHCost(self):
-        '''Sets the nodes '''
+        '''Sets the node's hCost, which is the distance to the goal node.'''
 
         xCoord = self.xCoord
         yCoord = self.yCoord
-        #TODO: complete this before all other TODOs!!!
+        goalNode = findNodeHavingCoords(goal) # sets goal node
+        x = abs(goalNode.xCoord - xCoord)
+        y = abs(goalNode.yCoord - yCoord)
+        if x<y: # x is smaller than y
+            self.hCost = 14*x + 10*(y-x)
+        else: # y is smaller than x
+            self.hCost = 14*y + 10*(x-y)
+
 
     def calcFCost(self):
         '''Sets the nodes fCost.
@@ -146,6 +152,27 @@ def getNeighbors(centerNode):
     
     return neighbors
 
+def isNewPathShorter(node, current):
+    '''Returns True if the node's gCost to "current" is less than its gCost'''
+
+    if node not in open:
+        return False
+    oldGCost = node.gCost
+    adj = node.calcAdjacencyTo(current)
+    if adj == '+':
+            newGCost = 10 + current.gCost
+    if adj == 'x':
+            newGCost = 14 + current.gCost
+    if newGCost < oldGCost:
+        return True
+
+def printPath(coords):
+    '''Prints the path from the node with coordinates "coords" to the start node.'''
+    node = findNodeHavingCoords(coords)
+    while(node.parent != node):
+        print(node)
+        node = node.parent
+    print(node)
 
 # read testFP in grayscale mode
 img = cv.imread('Floorplans/testFP.png', cv.IMREAD_GRAYSCALE)
@@ -170,12 +197,10 @@ startNode = findNodeHavingCoords(start)
 open.append(startNode)
 startNode.setParent(startNode) # set the start node's parent to itself
 startNode.gCost = 0
-# set goal node
-goalNode = findNodeHavingCoords(goal)
 
 pathFound = False
 # core loop
-for i in range(1): #TODO: set the proper range/condition
+for i in range(10): # just a hard limit for safety
     # set current to the node in OPEN with the lowest fCost. Here, sorted() will sort by fCost because __lt__ was manually defined to do so.
     current = sorted(open)[0]
     # remove current from open
@@ -198,7 +223,7 @@ for i in range(1): #TODO: set the proper range/condition
             continue # skip to the next neighbor
 
         # if neighbor is not in OPEN || new path to neighbor is shorter
-        if neighbor not in open or isNewPathShorter(neighbor): #TODO: define this function
+        if neighbor not in open or isNewPathShorter(neighbor, current):
             # set parent of neighbor to current
             neighbor.setParent(current)
             
@@ -208,7 +233,13 @@ for i in range(1): #TODO: set the proper range/condition
             # if neighbor is not in OPEN
             if neighbor not in open:
                 open.append(neighbor) # add neighbor to open
-else: print("ERROR: Path not found!")
+else: print("ERROR: Path not found!") # runs if the for loop exits without touching a break statement
+
+if pathFound:
+    print('Path found.')
+    printPath(goal)
 
 # save test output image
 cv.imwrite('Modules/3_Pathfinding/testOutput.png', img)
+
+#TODO: create Test2.py and test the code using a 5x5 test floor plan before scaling up.
