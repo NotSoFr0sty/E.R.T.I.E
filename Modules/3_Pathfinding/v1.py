@@ -33,6 +33,7 @@ NOTE: Black means wall, white means floor
 
 import cv2 as cv
 import numpy as np
+import time
 
 class Node:
     '''Each object of this class represents a pixel.'''
@@ -122,34 +123,83 @@ class Node:
 def findNodeHavingCoords(coords):
     '''Returns the node in the list "nodes" which has the coordinates "coords." '''
 
-    for node in nodes:
-        if node.coords == coords:
-            return node
+    x = coords[0]
+    y = coords[1]
+    oneD = (x * cols) + y
+    return nodes[oneD]
 
-def getNeighbors(centerNode): #TODO: Optimize this function!!!
+def getNeighbors(centerNode): #TODO: Optimize this function!!! https://stackoverflow.com/questions/1730961/convert-a-2d-array-index-into-a-1d-index
     '''Returns a list of adjacent nodes of the input node'''
+    # neighbors = []
+    # xCoord = centerNode.xCoord
+    # yCoord = centerNode.yCoord
+    # for node in nodes:
+    #     if node.xCoord == xCoord-1 and node.yCoord == yCoord: # top
+    #         neighbors.append(node)
+    #     if node.xCoord == xCoord-1 and node.yCoord == yCoord+1: # top right
+    #         neighbors.append(node)
+    #     if node.xCoord == xCoord and node.yCoord == yCoord+1: # right
+    #         neighbors.append(node)
+    #     if node.xCoord == xCoord+1 and node.yCoord == yCoord+1: # bottom right
+    #         neighbors.append(node)
+    #     if node.xCoord == xCoord+1 and node.yCoord == yCoord: # bottom
+    #         neighbors.append(node)
+    #     if node.xCoord == xCoord+1 and node.yCoord == yCoord-1: # bottom left
+    #         neighbors.append(node)
+    #     if node.xCoord == xCoord and node.yCoord == yCoord-1: # left
+    #         neighbors.append(node)
+    #     if node.xCoord == xCoord-1 and node.yCoord == yCoord-1: # top left
+    #         neighbors.append(node)
+    # return neighbors
 
     neighbors = []
-    xCoord = centerNode.xCoord
-    yCoord = centerNode.yCoord
-    for node in nodes:
-        if node.xCoord == xCoord-1 and node.yCoord == yCoord: # top
-            neighbors.append(node)
-        if node.xCoord == xCoord-1 and node.yCoord == yCoord+1: # top right
-            neighbors.append(node)
-        if node.xCoord == xCoord and node.yCoord == yCoord+1: # right
-            neighbors.append(node)
-        if node.xCoord == xCoord+1 and node.yCoord == yCoord+1: # bottom right
-            neighbors.append(node)
-        if node.xCoord == xCoord+1 and node.yCoord == yCoord: # bottom
-            neighbors.append(node)
-        if node.xCoord == xCoord+1 and node.yCoord == yCoord-1: # bottom left
-            neighbors.append(node)
-        if node.xCoord == xCoord and node.yCoord == yCoord-1: # left
-            neighbors.append(node)
-        if node.xCoord == xCoord-1 and node.yCoord == yCoord-1: # top left
-            neighbors.append(node)
-    
+    x = centerNode.xCoord
+    y = centerNode.yCoord
+    try:
+        if x-1<0: raise IndexError
+        coords = [x-1, y]
+        neighbors.append(findNodeHavingCoords(coords))
+    except IndexError: pass
+    try:
+        if x-1<0: raise IndexError
+        temp = img[x-1, y+1]
+        coords = [x-1, y+1]
+        neighbors.append(findNodeHavingCoords(coords))
+    except IndexError: pass
+    try:
+        temp = img[x, y+1]
+        coords = [x, y+1]
+        neighbors.append(findNodeHavingCoords(coords))
+    except IndexError: pass
+    try:
+        temp = img[x+1, y+1]
+        coords = [x+1, y+1]
+        neighbors.append(findNodeHavingCoords(coords))
+    except IndexError: pass
+    try:
+        temp = img[x+1, y]
+        coords = [x+1, y]
+        neighbors.append(findNodeHavingCoords(coords))
+    except IndexError: pass
+    try:
+        if y-1<0: raise IndexError
+        temp = img[x+1, y-1]
+        coords = [x+1, y-1]
+        neighbors.append(findNodeHavingCoords(coords))
+    except IndexError: pass
+    try:
+        if y-1<0: raise IndexError
+        temp = img[x, y-1]
+        coords = [x, y-1]
+        neighbors.append(findNodeHavingCoords(coords))
+    except IndexError: pass
+    try:
+        if y-1<0 or x-1<0: raise IndexError
+        temp = img[x-1, y-1]
+        coords = [x-1, y-1]
+        neighbors.append(findNodeHavingCoords(coords))
+    except IndexError: pass
+
     return neighbors
 
 def isNewPathShorter(node, current):
@@ -177,19 +227,20 @@ def getPath(coords):
     pathNodes.append(node)
     return pathNodes
 
-def drawPath(nodes, img):
+def drawPath(pathNodes, img):
     '''Draws a path on the input image and returns the resulting image.
     All pixels that correspond to the nodes in the input list will be colored red.
     '''
     img = cv.cvtColor(img, cv.COLOR_GRAY2BGR)
-    for x in range(rows):
-        for y in range(cols):
+    # for x in range(rows):
+    #     for y in range(cols):
 
-            for node in nodes:
-                if node.coords == [x,y]:
-                    # color that pixel red
-                    img[x,y] = [0,0,255]
-
+    #         for node in nodes:
+    #             if node.coords == [x,y]:
+    #                 # color that pixel red
+    #                 img[x,y] = [0,0,255]
+    for node in pathNodes:
+        img[node.xCoord, node.yCoord] = [0,0,255]
     return img
 
 
@@ -226,6 +277,8 @@ startNode.gCost = 0
 
 pathFound = False
 # core loop
+startTime = time.time()
+print("Finding path, please wait...")
 for i in range(10000): # just a hard limit for safety
     # set current to the node in OPEN with the lowest fCost. Here, sorted() will sort by fCost because __lt__ was manually defined to do so.
     try:
@@ -269,7 +322,9 @@ else: # runs if the for loop exits without touching a break statement
     # raise SystemExit # terminate the code early #TODO: temporarily commented the exit and other stuff so fix it
 
 # if the program hasn't terminated, then the path has surely been found.
-print('Path found.')
+if pathFound: print('Path found.')
+endTime = time.time()
+print(f'Elapsed time: {endTime - startTime:.2f} seconds.')
 pathNodes = getPath(goal)
 newImg = drawPath(pathNodes, img)
 
