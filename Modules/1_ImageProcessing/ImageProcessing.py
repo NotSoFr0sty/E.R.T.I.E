@@ -3,9 +3,9 @@ import numpy as np
 
 
 #read and display original floorplan in grayscale mode
-floorPlanNum = 2
+floorPlanNum = 4
 img = cv.imread(f'Floorplans/{floorPlanNum}.jpg', cv.IMREAD_GRAYSCALE)
-cv.imshow('Input Floorplan', img)
+# cv.imshow('Input Floorplan', img)
 
 #dilate image to remove text
 kernalSize = 3
@@ -34,10 +34,10 @@ denoisedImg = np.zeros((labels.shape), np.uint8)
 for i in range(0, nlabels - 1):
     if areas[i] >= 25: #then keep
         denoisedImg[labels == i+1] = 255
-cv.imshow('Processed Floorplan', denoisedImg)
+# cv.imshow('Processed Floorplan', denoisedImg)
 
 #save image
 cv.imwrite('Floorplans/Output.png', denoisedImg)
 
-cv.waitKey(0)
-cv.destroyAllWindows()
+# cv.waitKey(0)
+# cv.destroyAllWindows()
