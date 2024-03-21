@@ -34,6 +34,10 @@ NOTE: Black means wall, white means floor
 import cv2 as cv
 import numpy as np
 import time
+import sys 
+import os
+sys.path.append(os.path.abspath("Modules/1_ImageProcessing"))
+from ImageProcessing import floorPlanNum
 
 class Node:
     '''Each object of this class represents a pixel.'''
@@ -243,11 +247,38 @@ def drawPath(pathNodes, img):
         img[node.xCoord, node.yCoord] = [0,0,255]
     return img
 
+def overlayPath(img, fp):
+    
+    # scale new image to match ogFPImg
+    # print(img.shape)
+    # print(fp.shape)
+    shapeIWant = []
+    shapeIWant.append(fp.shape[1])
+    shapeIWant.append(fp.shape[0])
+    shapeIWant = tuple(shapeIWant)
+    img = cv.resize(img, shapeIWant, interpolation=cv.INTER_NEAREST)
+
+    # fp = cv.addWeighted(img, .3, fp, .7, 0)
+    # return fp
+
+    for x in range(ogRows):
+        for y in range(ogCols):
+            
+            if (img[x,y] == [0,0,255]).all(): #if pixel is red
+                fp[x,y] = [0,0,255]
+    return fp
 
 # read testFP in grayscale mode
-originalImg = cv.imread('Floorplans/Output.png', cv.IMREAD_GRAYSCALE)
-originalImg = cv.bitwise_not(originalImg) # inverted original image
-img = cv.resize(originalImg, (0,0), fx=0.25, fy=0.25, interpolation=cv.INTER_NEAREST)
+originalFPImg = cv.imread(f'Floorplans/{floorPlanNum}.jpg')
+ogRows = originalFPImg.shape[0]
+ogCols = originalFPImg.shape[1]
+# print(f'Rows: {ogRows}')
+# print(f'Cols:{ogCols}')
+# print(ogRows, ogCols)
+inputImg = cv.imread('Floorplans/Output.png', cv.IMREAD_GRAYSCALE)
+inputImg = cv.bitwise_not(inputImg) # inverted original image
+img = cv.resize(inputImg, (0,0), fx=0.30, fy=0.30, interpolation=cv.INTER_NEAREST)
+
 
 # get dimensions of the input image
 rows, cols = img.shape
@@ -279,7 +310,7 @@ pathFound = False
 # core loop
 startTime = time.time()
 print("Finding path, please wait...")
-for i in range(10000): # just a hard limit for safety
+for i in range(1000): # just a hard limit for safety
     # set current to the node in OPEN with the lowest fCost. Here, sorted() will sort by fCost because __lt__ was manually defined to do so.
     try:
         current = sorted(open)[0]
@@ -327,6 +358,7 @@ endTime = time.time()
 print(f'Elapsed time: {endTime - startTime:.2f} seconds.')
 pathNodes = getPath(goal)
 newImg = drawPath(pathNodes, img)
+finalImg = overlayPath(newImg, originalFPImg)
 
 # save test output image
-cv.imwrite('Modules/3_Pathfinding/TestOutput.png', newImg)
+cv.imwrite('Modules/3_Pathfinding/TestOutput.png', finalImg)

@@ -3,7 +3,8 @@ import numpy as np
 
 
 #read and display original floorplan in grayscale mode
-img = cv.imread('Floorplans/2.jpg', cv.IMREAD_GRAYSCALE)
+floorPlanNum = 3
+img = cv.imread(f'Floorplans/{floorPlanNum}.jpg', cv.IMREAD_GRAYSCALE)
 cv.imshow('Input Floorplan', img)
 
 #dilate image to remove text
@@ -17,7 +18,7 @@ threshold, bwImg = cv.threshold(dilatedImg, 192, 255, cv.THRESH_BINARY)
 # cv.imshow('Thresholded', bwImg)
 
 #erode image
-kernalSize = 3
+kernalSize = 4
 kernel = np.ones((kernalSize, kernalSize), np.uint8)
 erodedImg = cv.erode(bwImg, kernel)
 # cv.imshow('Eroded', erodedImg)
