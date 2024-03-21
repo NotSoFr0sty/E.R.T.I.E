@@ -132,7 +132,7 @@ def findNodeHavingCoords(coords):
     oneD = (x * cols) + y
     return nodes[oneD]
 
-def getNeighbors(centerNode): #TODO: Optimize this function!!! https://stackoverflow.com/questions/1730961/convert-a-2d-array-index-into-a-1d-index
+def getNeighbors(centerNode):
     '''Returns a list of adjacent nodes of the input node'''
     # neighbors = []
     # xCoord = centerNode.xCoord
@@ -291,8 +291,18 @@ for x in range(rows):
         newNode = Node([x,y])
         nodes.append(newNode)
 # set start node, goal node        
-start = [0,0]
-goal = [rows-1, cols-1]
+try: #TODO: https://stackoverflow.com/questions/28327020/opencv-detect-mouse-position-clicking-over-a-picture
+    start = [0,0]
+    img[start[0], start[1]]
+except IndexError:
+    print("Start node is out of image bounds! Setting default start position [0,0]...")
+    start = [0,0]
+try:
+    goal = [175, 72]
+    img[goal[0], goal[1]]
+except IndexError:
+    print("Goal node is out of image bounds! Setting default goal position...")
+    goal = [rows-1, cols-1]
 # if the goal node is not traversable, then exit
 if not findNodeHavingCoords(goal).isTraversable():
     print("Goal node is not traversable!")
@@ -310,7 +320,7 @@ pathFound = False
 # core loop
 startTime = time.time()
 print("Finding path, please wait...")
-for i in range(1000): # just a hard limit for safety
+for i in range(15000): # just a hard limit for safety
     # set current to the node in OPEN with the lowest fCost. Here, sorted() will sort by fCost because __lt__ was manually defined to do so.
     try:
         current = sorted(open)[0]
@@ -350,15 +360,20 @@ for i in range(1000): # just a hard limit for safety
 else: # runs if the for loop exits without touching a break statement
     print("ERROR: A path could not be found!")
     goal = current.coords
-    # raise SystemExit # terminate the code early #TODO: temporarily commented the exit and other stuff so fix it
+    # raise SystemExit # terminate the code early
 
 # if the program hasn't terminated, then the path has surely been found.
 if pathFound: print('Path found.')
 endTime = time.time()
 print(f'Elapsed time: {endTime - startTime:.2f} seconds.')
+print("Drawing path...")
 pathNodes = getPath(goal)
 newImg = drawPath(pathNodes, img)
 finalImg = overlayPath(newImg, originalFPImg)
+print("Done.")
 
 # save test output image
 cv.imwrite('Modules/3_Pathfinding/TestOutput.png', finalImg)
+cv.imshow('Output', finalImg)
+cv.waitKey(0)
+cv.destroyAllWindows
