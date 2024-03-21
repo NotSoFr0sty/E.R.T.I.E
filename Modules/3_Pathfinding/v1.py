@@ -298,7 +298,8 @@ except IndexError:
     print("Start node is out of image bounds! Setting default start position [0,0]...")
     start = [0,0]
 try:
-    goal = [175, 72]
+    # for FP 4 use goal = 175, 72
+    goal = [1750, 72]
     img[goal[0], goal[1]]
 except IndexError:
     print("Goal node is out of image bounds! Setting default goal position...")
