@@ -250,8 +250,6 @@ def drawPath(pathNodes, img):
 def overlayPath(img, fp):
     
     # scale new image to match ogFPImg
-    # print(img.shape)
-    # print(fp.shape)
     shapeIWant = []
     shapeIWant.append(fp.shape[1])
     shapeIWant.append(fp.shape[0])
@@ -268,17 +266,39 @@ def overlayPath(img, fp):
                 fp[x,y] = [0,0,255]
     return fp
 
+def onMouse(event, x, y, flags, param):
+    global mousePos
+    if event == cv.EVENT_LBUTTONDOWN:
+        x, y = y, x
+        mousePos = [x,y]
+        cv.destroyWindow(globalLabel)
+        # print(f'{mousePos}\tPress any key to confirm...')
+
+def setPosWithMouse(img, label):
+    '''Returns the position of the cursor when LeftButton is pressed.'''
+    
+    global globalLabel
+    globalLabel = f'Set {label}\'s position'
+    cv.imshow(f'Set {label}\'s position', img)
+    cv.setMouseCallback(f'Set {label}\'s position', onMouse)
+    cv.waitKey(0)
+    # cv.destroyWindow(f'Set {label}\'s position')
+    try:
+        mousePos[0] = round(mousePos[0]*0.3)
+        mousePos[1] = round(mousePos[1]*0.3)
+    except NameError:
+        print("Failed to set position, exiting...")
+        raise SystemExit
+    return mousePos
+
 # read testFP in grayscale mode
 originalFPImg = cv.imread(f'Floorplans/{floorPlanNum}.jpg')
 ogRows = originalFPImg.shape[0]
 ogCols = originalFPImg.shape[1]
-# print(f'Rows: {ogRows}')
-# print(f'Cols:{ogCols}')
-# print(ogRows, ogCols)
 inputImg = cv.imread('Floorplans/Output.png', cv.IMREAD_GRAYSCALE)
 inputImg = cv.bitwise_not(inputImg) # inverted original image
 img = cv.resize(inputImg, (0,0), fx=0.30, fy=0.30, interpolation=cv.INTER_NEAREST)
-
+# resizedOriginalFPImg = cv.resize(originalFPImg, (0,0), fx=0.30, fy=0.30, interpolation=cv.INTER_NEAREST)
 
 # get dimensions of the input image
 rows, cols = img.shape
@@ -290,16 +310,12 @@ for x in range(rows):
     for y in range(cols):
         newNode = Node([x,y])
         nodes.append(newNode)
-# set start node, goal node        
-try: #TODO: https://stackoverflow.com/questions/28327020/opencv-detect-mouse-position-clicking-over-a-picture
-    start = [0,0]
-    img[start[0], start[1]]
-except IndexError:
-    print("Start node is out of image bounds! Setting default start position [0,0]...")
-    start = [0,0]
+
+# set start node, goal node
+print("Click anywhere to set the goal position.")
+goal = setPosWithMouse(originalFPImg, 'Civilian')
 try:
     # for FP 4 use goal = 175, 72
-    goal = [1750, 72]
     img[goal[0], goal[1]]
 except IndexError:
     print("Goal node is out of image bounds! Setting default goal position...")
@@ -308,6 +324,14 @@ except IndexError:
 if not findNodeHavingCoords(goal).isTraversable():
     print("Goal node is not traversable!")
     raise SystemExit
+
+print("Click anywhere to set the start position.")
+start = setPosWithMouse(originalFPImg, 'Rescue Team')      
+try:
+    img[start[0], start[1]]
+except IndexError:
+    print("Start node is out of image bounds! Setting default start position [0,0]...")
+    start = [0,0]
 
 open = []
 closed = []
@@ -320,7 +344,7 @@ startNode.gCost = 0
 pathFound = False
 # core loop
 startTime = time.time()
-print("Finding path, please wait...")
+print("\nFinding path, please wait...")
 for i in range(15000): # just a hard limit for safety
     # set current to the node in OPEN with the lowest fCost. Here, sorted() will sort by fCost because __lt__ was manually defined to do so.
     try:
@@ -367,7 +391,7 @@ else: # runs if the for loop exits without touching a break statement
 if pathFound: print('Path found.')
 endTime = time.time()
 print(f'Elapsed time: {endTime - startTime:.2f} seconds.')
-print("Drawing path...")
+print("\nDrawing path...")
 pathNodes = getPath(goal)
 newImg = drawPath(pathNodes, img)
 finalImg = overlayPath(newImg, originalFPImg)

@@ -1,4 +1,5 @@
 import numpy as np
+import cv2 as cv
 
 # myArray = np.array([[1,2,3],
 #                     [4,5,6],
@@ -24,22 +25,37 @@ import numpy as np
 
 # print("After try-except block.")
 
-class Fruit():
-    def __init__(self, name, price):
-        self.name = name
-        self.price = price
+# class Fruit():
+#     def __init__(self, name, price):
+#         self.name = name
+#         self.price = price
 
-    # def __lt__(self, other): # other is another instance of Fruit
-    #     return self.price < other.price
+#     # def __lt__(self, other): # other is another instance of Fruit
+#     #     return self.price < other.price
     
-    def __gt__(self, other): # other is another instance of Fruit
-        return self.price > other.price
+#     def __gt__(self, other): # other is another instance of Fruit
+#         return self.price > other.price
 
-apple = Fruit("Apple", 5)
-cherry = Fruit("Cherry", 20)
-blueberry = Fruit("Blueberry", 10)
-L = [cherry, apple, blueberry]
+# apple = Fruit("Apple", 5)
+# cherry = Fruit("Cherry", 20)
+# blueberry = Fruit("Blueberry", 10)
+# L = [cherry, apple, blueberry]
 
-print("-----sorted using comparison operator (without key)-----")
-for f in sorted(L):
-    print(f.name)
+# print("-----sorted using comparison operator (without key)-----")
+# for f in sorted(L):
+#     print(f.name)
+
+def onMouse(event, x, y, flags, param):
+    global mousePos
+    global img
+    if event == cv.EVENT_LBUTTONDOWN:
+        mousePos = [x,y]
+        print(mousePos)
+
+
+img = cv.imread('Modules/3_Pathfinding/TestOutput.png')
+cv.imshow('image', img)
+cv.setMouseCallback('image', onMouse)
+cv.waitKey(0)
+cv.destroyAllWindows
+print(mousePos)
