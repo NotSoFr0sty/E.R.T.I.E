@@ -291,7 +291,7 @@ def setPosWithMouse(img, label):
         raise SystemExit
     return mousePos
 
-# read testFP in grayscale mode
+# read testFP in grayscale mode #FIXME: Comments are out of date.
 originalFPImg = cv.imread(f'Floorplans/{floorPlanNum}.jpg')
 ogRows = originalFPImg.shape[0]
 ogCols = originalFPImg.shape[1]
