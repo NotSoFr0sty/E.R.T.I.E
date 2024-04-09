@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>E.R.T.I.E.</title>
+{% endblock %}
+
+{% block body %}
+    <h1>E.R.T.I.E.</h1>
+    <form action="/select-floorplan">
+        <label for="location">Select the location:</label>
+        <select id="location" name="location">
+            <option value="1">House 1</option>
+            <option value="2">House 2</option>
+            <option value="3">House 3</option>
+            <option value="4">Shopping Mall</option>
+            <option value="upload">Upload custom floor plan</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}
