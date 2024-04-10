@@ -12,6 +12,7 @@ scene.add(new THREE.AxesHelper(5));
 // Lights
 const light = new THREE.PointLight()
 light.position.set(0, 0, 100)
+light.intensity = 10
 // const light = new THREE.AmbientLight(0x404040)
 scene.add(light)
 
@@ -40,7 +41,7 @@ controls.enableDamping = true
 
 // Geometry - Model
 const material = new THREE.MeshPhongMaterial({
-    color: 0xff0000, shininess: 10, side: THREE.DoubleSide
+    color: 0x404040, shininess: 10, side: THREE.DoubleSide
 })
 const loader = new STLLoader()
 loader.load(
