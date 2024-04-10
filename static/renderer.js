@@ -12,12 +12,12 @@ scene.add(new THREE.AxesHelper(5));
 // Lights
 const light = new THREE.PointLight()
 light.position.set(-500, 0, 500)
-light.intensity = 0.75
+light.intensity = 0.50
 // const light = new THREE.AmbientLight(0x404040)
 scene.add(light)
 const light2 = new THREE.PointLight()
 light2.position.set(500, 0, 500)
-light2.intensity = 0.75
+light2.intensity = 0.50
 scene.add(light2)
 // Area light (doesn't work with Phong materials)
 // const light3 = new THREE.RectAreaLight(
@@ -75,7 +75,7 @@ const texture = new THREE.TextureLoader().load(
     '/static/TestOutput.png'
 );
 const planeMaterial = new THREE.MeshPhongMaterial({
-    map: texture, shininess: 100
+    map: texture, shininess: 150
 });
 const planeGeometry = new THREE.PlaneGeometry(
     800, 619
