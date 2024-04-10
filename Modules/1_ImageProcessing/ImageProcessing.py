@@ -3,7 +3,7 @@ import numpy as np
 
 
 #read and display original floorplan in grayscale mode
-floorPlanNum = 4
+floorPlanNum = 2
 img = cv.imread(f'Floorplans/{floorPlanNum}.jpg', cv.IMREAD_GRAYSCALE)
 # cv.imshow('Input Floorplan', img)
 

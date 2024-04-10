@@ -10,9 +10,9 @@ const scene = new THREE.Scene();
 scene.add(new THREE.AxesHelper(5));
 
 // Lights
-// const light = new THREE.SpotLight()
-// light.position.set(20, 20, 20)
-const light = new THREE.AmbientLight(0x404040)
+const light = new THREE.PointLight()
+light.position.set(0, 0, 100)
+// const light = new THREE.AmbientLight(0x404040)
 scene.add(light)
 
 // Camera
@@ -29,6 +29,7 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
 camera.position.setZ(100);
 // camera.position.setX(100);
 // camera.position.setY(-100);
@@ -37,9 +38,9 @@ camera.position.setZ(100);
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
 
-// Geometry
+// Geometry - Model
 const material = new THREE.MeshPhongMaterial({
-    color: 0xff0000, shininess: 200, side: THREE.DoubleSide, wireframe: true
+    color: 0xff0000, shininess: 10, side: THREE.DoubleSide
 })
 const loader = new STLLoader()
 loader.load(
@@ -56,6 +57,18 @@ loader.load(
         console.log(error)
     }
 )
+
+// Geometry - Floor plan
+const texture = new THREE.TextureLoader().load(
+    '/static/TestOutput.png'
+);
+const planeMaterial = new THREE.MeshBasicMaterial({map: texture});
+const planeGeometry = new THREE.PlaneGeometry(
+    800, 619
+)
+const plane = new THREE.Mesh(planeGeometry, planeMaterial)
+scene.add(plane)
+plane.position.set(0, -10, 1)
 
 // Resizer
 window.addEventListener('resize', onWindowResize, false)
