@@ -11,10 +11,21 @@ scene.add(new THREE.AxesHelper(5));
 
 // Lights
 const light = new THREE.PointLight()
-light.position.set(0, 0, 100)
-light.intensity = 10
+light.position.set(-500, 0, 500)
+light.intensity = 0.75
 // const light = new THREE.AmbientLight(0x404040)
 scene.add(light)
+const light2 = new THREE.PointLight()
+light2.position.set(500, 0, 500)
+light2.intensity = 0.75
+scene.add(light2)
+// Area light (doesn't work with Phong materials)
+// const light3 = new THREE.RectAreaLight(
+//     0xffffff, 1000, 10, 10
+// );
+// light3.position.set(0,0,50);
+// light3.lookAt(0,0,0);
+// scene.add(light3)
 
 // Camera
 const camera = new THREE.PerspectiveCamera(
@@ -63,13 +74,15 @@ loader.load(
 const texture = new THREE.TextureLoader().load(
     '/static/TestOutput.png'
 );
-const planeMaterial = new THREE.MeshBasicMaterial({map: texture});
+const planeMaterial = new THREE.MeshPhongMaterial({
+    map: texture, shininess: 100
+});
 const planeGeometry = new THREE.PlaneGeometry(
     800, 619
 )
 const plane = new THREE.Mesh(planeGeometry, planeMaterial)
 scene.add(plane)
-plane.position.set(0, -10, 1)
+plane.position.set(0, -10, 2)
 
 // Resizer
 window.addEventListener('resize', onWindowResize, false)
