@@ -10,7 +10,7 @@ Else set Z values to the default, 0
 Create the 3D mesh using mesh.Mesh(data)
 Save the mesh as an STL model
 '''
-
+#TODO: get this module ready for use in the web app (use main(), etc.)
 import numpy
 from stl import mesh
 import cv2 as cv
