@@ -1,7 +1,17 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from waitress import serve
+from flask_wtf import FlaskForm
+from wtforms import FileField, SubmitField
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'NotSoFr0sty'
+app.config['UPLOAD_FOLDER'] = 'static/floor-plans'
+
+class UploadFileForm(FlaskForm):
+    file = FileField("File")
+    submit = SubmitField("Upload Floor Plan")
 
 @app.route('/')
 @app.route('/index')
@@ -22,10 +32,25 @@ def selectFloorPlan():
     }
     locIndex = request.args.get('location')
     location = locDict[locIndex]
+
     if (locIndex=='upload'):
-        return render_template('upload-floor-plan.html', locIndex=locIndex, location=location)
+        return redirect('/upload-floor-plan')
     
     return render_template('select-floor-plan.html', locIndex=locIndex, location=location)
+
+@app.route('/upload-floor-plan', methods=['GET', 'POST'])
+def uploadFloorPlan():
+    form = UploadFileForm()
+    if form.validate_on_submit():
+        file = form.file.data
+        file.filename = 'upload.jpg'
+        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename)))
+        # os.rename(f'./static/floor-plans/{file.filename}', 'upload.jpg') # secretly rename the file
+        # return f"{file.filename} has been uploaded."
+        return render_template('select-floor-plan.html', locIndex='upload', location='Custom Floor Plan')
+    
+    return render_template("upload-floor-plan.html", form=form)
+
 
 if __name__ == "__main__":
     serve(app, host="0.0.0.0", port=8000)
