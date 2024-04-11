@@ -17,4 +17,11 @@
         </select>
         <button type="submit">View</button>
     </form>
+    <br>
+    <h2>Currently viewing {{ location }}</h2>
+    <img src="/static/floor-plans/{{ locIndex }}.jpg">
+    <form action="/render">
+        <input type="hidden" name="location" value="{{locIndex}}">
+        <button type="submit">Generate 3D Model</button>
+    </form>
 {% endblock %}
