@@ -5,6 +5,10 @@ import * as THREE from 'https://cdn.skypack.dev/three@0.132.2'
 import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.110.0/examples/jsm/loaders/STLLoader.js'
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.110.0/examples/jsm/controls/OrbitControls.js'
 
+var url_string = window.location.href
+var url = new URL(url_string);
+var locIndex = url.searchParams.get("location");
+
 // Scene
 const scene = new THREE.Scene();
 scene.add(new THREE.AxesHelper(5));
@@ -56,7 +60,7 @@ const material = new THREE.MeshPhongMaterial({
 })
 const loader = new STLLoader()
 loader.load(
-    '/static/v1.stl',
+    '/static/models/model.stl',
     function (geometry) {
         const mesh = new THREE.Mesh(geometry, material)
         scene.add(mesh)
@@ -72,7 +76,7 @@ loader.load(
 
 // Geometry - Floor plan
 const texture = new THREE.TextureLoader().load(
-    '/static/TestOutput.png'
+    `/static/floor-plans/${locIndex}.jpg`
 );
 const planeMaterial = new THREE.MeshPhongMaterial({
     map: texture, shininess: 150

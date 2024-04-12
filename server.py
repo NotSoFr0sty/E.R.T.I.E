@@ -4,6 +4,9 @@ from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField
 from werkzeug.utils import secure_filename
 import os
+import cv2 as cv
+from Modules.One_ImageProcessing.ImageProcessing import processFloorPlan
+from Modules.Two_2Dto3D.my2Dto3D import convertTo3D
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'NotSoFr0sty'
@@ -51,6 +54,13 @@ def uploadFloorPlan():
     
     return render_template("upload-floor-plan.html", form=form)
 
+@app.route('/render')
+def createModel():
+    locIndex = request.args.get('location')
+    processedImage = processFloorPlan(f'static/floor-plans/{locIndex}.jpg')
+    convertTo3D(processedImage)
+
+    return render_template('render.html')
 
 if __name__ == "__main__":
     serve(app, host="0.0.0.0", port=8000)
