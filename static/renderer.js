@@ -54,39 +54,83 @@ camera.position.setZ(100);
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
 
-// Geometry - Model
-const material = new THREE.MeshPhongMaterial({
-    color: 0x404040, shininess: 10, side: THREE.DoubleSide
-})
-const loader = new STLLoader()
-loader.load(
-    '/static/models/model.stl',
-    function (geometry) {
-        const mesh = new THREE.Mesh(geometry, material)
-        scene.add(mesh)
-        mesh.position.set(-400, 300, 0)
-    },
-    (xhr) => {
-        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-    },
-    (error) => {
-        console.log(error)
-    }
-)
 
-// Geometry - Floor plan
+//Define Plane Texture
+let floorPlanWidth = 0
+let floorPlanHeight = 0
+let xOffset = 0
+let yOffset = 0
 const texture = new THREE.TextureLoader().load(
-    `/static/floor-plans/${locIndex}.jpg`
+    `/static/floor-plans/${locIndex}.jpg`, function(texture){
+        console.log(texture.image.width);
+        console.log(texture.image.height);
+        floorPlanWidth = texture.image.width
+        floorPlanHeight = texture.image.height
+        xOffset = (-1)*(floorPlanWidth/2)
+        yOffset = (floorPlanHeight/2)
+        
+        // Geometry - Floor plan
+        const planeMaterial = new THREE.MeshPhongMaterial({
+            map: texture, shininess: 150
+        });
+        const planeGeometry = new THREE.PlaneGeometry(
+            floorPlanWidth, floorPlanHeight
+        )
+        const plane = new THREE.Mesh(planeGeometry, planeMaterial)
+        scene.add(plane)
+        // plane.position.set(0, -10, 2)
+        plane.position.set(0, 0, 2)
+
+        // Geometry - Model
+        const material = new THREE.MeshPhongMaterial({
+            color: 0x404040, shininess: 10, side: THREE.DoubleSide
+        })
+        const loader = new STLLoader()
+        loader.load(
+            '/static/models/model.stl',
+            function (geometry) {
+                const mesh = new THREE.Mesh(geometry, material)
+                scene.add(mesh)
+                mesh.position.set(xOffset, yOffset, 0)
+            },
+            (xhr) => {
+                console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+            },
+            (error) => {
+                console.log(error)
+            }
+        )
+    }
 );
-const planeMaterial = new THREE.MeshPhongMaterial({
-    map: texture, shininess: 150
-});
-const planeGeometry = new THREE.PlaneGeometry(
-    800, 619
-)
-const plane = new THREE.Mesh(planeGeometry, planeMaterial)
-scene.add(plane)
-plane.position.set(0, -10, 2)
+// const planeMaterial = new THREE.MeshPhongMaterial({
+//     map: texture, shininess: 150
+// });
+// const planeGeometry = new THREE.PlaneGeometry(
+//     floorPlanWidth, floorPlanHeight
+// )
+// const plane = new THREE.Mesh(planeGeometry, planeMaterial)
+// scene.add(plane)
+// plane.position.set(0, 0, 2)
+
+// Geometry - Model
+// const material = new THREE.MeshPhongMaterial({
+//     color: 0x404040, shininess: 10, side: THREE.DoubleSide
+// })
+// const loader = new STLLoader()
+// loader.load(
+//     '/static/models/model.stl',
+//     function (geometry) {
+//         const mesh = new THREE.Mesh(geometry, material)
+//         scene.add(mesh)
+//         mesh.position.set(xOffset, yOffset, 0)
+//     },
+//     (xhr) => {
+//         console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+//     },
+//     (error) => {
+//         console.log(error)
+//     }
+// )
 
 // Resizer
 window.addEventListener('resize', onWindowResize, false)
