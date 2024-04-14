@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect
 from waitress import serve
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField
+from wtforms.validators import InputRequired
 from werkzeug.utils import secure_filename
 import os
 import cv2 as cv
@@ -13,7 +14,7 @@ app.config['SECRET_KEY'] = 'NotSoFr0sty'
 app.config['UPLOAD_FOLDER'] = 'static/floor-plans'
 
 class UploadFileForm(FlaskForm):
-    file = FileField("File")
+    file = FileField("File", validators=[InputRequired()])
     submit = SubmitField("Upload Floor Plan")
 
 @app.route('/')

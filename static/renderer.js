@@ -18,18 +18,21 @@ const light = new THREE.PointLight()
 light.position.set(-500, 0, 500)
 light.intensity = 0.50
 // const light = new THREE.AmbientLight(0x404040)
-scene.add(light)
+scene.add(light) //FIXME: toggle for debugging
 const light2 = new THREE.PointLight()
 light2.position.set(500, 0, 500)
 light2.intensity = 0.50
-scene.add(light2)
+scene.add(light2) //FIXME: toggle for debugging
 // Area light (doesn't work with Phong materials)
-// const light3 = new THREE.RectAreaLight(
-//     0xffffff, 1000, 10, 10
-// );
-// light3.position.set(0,0,50);
-// light3.lookAt(0,0,0);
-// scene.add(light3)
+const light3 = new THREE.RectAreaLight(
+    0xffffff, 0.5, 1000, 1000
+);
+light3.position.set(0,0,100);
+light3.lookAt(0,0,0);
+scene.add(light3)
+const light4 = new THREE.PointLight()
+light4.intensity = 0.1
+scene.add(light4)
 
 // Camera
 const camera = new THREE.PerspectiveCamera(
@@ -53,6 +56,7 @@ camera.position.setZ(100);
 // Orbit Controls
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
+controls.screenSpacePanning = true;
 
 
 //Define Plane Texture
@@ -82,8 +86,11 @@ const texture = new THREE.TextureLoader().load(
         plane.position.set(0, 0, 2)
 
         // Geometry - Model
-        const material = new THREE.MeshPhongMaterial({
-            color: 0x404040, shininess: 10, side: THREE.DoubleSide
+        // const material = new THREE.MeshPhongMaterial({
+        //     color: 0x404040, shininess: 10, side: THREE.DoubleSide
+        // })
+        const material = new THREE.MeshStandardMaterial({
+            side: THREE.DoubleSide, color: 0x292929
         })
         const loader = new STLLoader()
         loader.load(
@@ -100,6 +107,12 @@ const texture = new THREE.TextureLoader().load(
                 console.log(error)
             }
         )
+
+        // Update light positions
+        light.position.set(-500, yOffset, 500)
+        light2.position.set(500, yOffset, 500)
+        light4.position.set(0, -yOffset, 500)
+
     }
 );
 // const planeMaterial = new THREE.MeshPhongMaterial({
