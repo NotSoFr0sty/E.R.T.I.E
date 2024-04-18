@@ -63,12 +63,13 @@ const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 const cubeGeometry = new THREE.BoxGeometry(10, 10, 10);
 const goalCubeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-// const startCubeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 })
+const startCubeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 })
 const goalCube = new THREE.Mesh(cubeGeometry, goalCubeMaterial)
-// const startCube = new THREE.Mesh(cubeGeometry, startCubeMaterial)
+const startCube = new THREE.Mesh(cubeGeometry, startCubeMaterial)
 scene.add(goalCube)
-// scene.add(startCube)
+scene.add(startCube)
 let goalPosition = [0,0]
+let startPosition = [0,0]
 
 //Define Plane Texture
 let floorPlanWidth = 0
@@ -122,17 +123,33 @@ const texture = new THREE.TextureLoader().load(
                     if (intersects.length > 0) {
                         console.log(intersects[0].point)
                         if (intersects[0].point.z == 0){
-                            goalCube.position.copy(intersects[0].point)
-                            goalCube.position.z = 2;
-                            goalPosition[0] = (-1) * (Math.round(goalCube.position.y) - yOffset)
-                            goalPosition[1] = Math.round(goalCube.position.x) - xOffset
-                            console.log(goalPosition)
+                            switch(event.button){
+                                // Left click
+                                case 0:
+                                    goalCube.position.copy(intersects[0].point)
+                                    goalCube.position.z = 2;
+                                    goalPosition[0] = (-1) * (Math.round(goalCube.position.y) - yOffset)
+                                    goalPosition[1] = Math.round(goalCube.position.x) - xOffset
+                                    console.log("Goal Position: " + goalPosition)
+                                    break;
+                                
+                                // Right click
+                                case 2:
+                                    startCube.position.copy(intersects[0].point)
+                                    startCube.position.z = 2;
+                                    startPosition[0] = (-1) * (Math.round(startCube.position.y) - yOffset)
+                                    startPosition[1] = Math.round(startCube.position.x) - xOffset
+                                    console.log("Start Position: " + startPosition)
+                                    break;
+                            }
+                            
                         }
                         
                     }
 
                 }
-                window.addEventListener('click', onPointerClick)
+                // window.addEventListener('click', onPointerClick)
+                window.addEventListener('pointerup', onPointerClick)
             },
             (xhr) => {
                 console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
