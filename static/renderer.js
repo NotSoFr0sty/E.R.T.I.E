@@ -113,6 +113,9 @@ const texture = new THREE.TextureLoader().load(
         light2.position.set(500, yOffset, 500)
         light4.position.set(0, -yOffset, 500)
 
+        // Update camera position
+        camera.position.setZ(floorPlanWidth>floorPlanHeight ? (floorPlanWidth/2):(floorPlanHeight/2));
+
     }
 );
 // const planeMaterial = new THREE.MeshPhongMaterial({
