@@ -68,6 +68,7 @@ const goalCube = new THREE.Mesh(cubeGeometry, goalCubeMaterial)
 // const startCube = new THREE.Mesh(cubeGeometry, startCubeMaterial)
 scene.add(goalCube)
 // scene.add(startCube)
+let goalPosition = [0,0]
 
 //Define Plane Texture
 let floorPlanWidth = 0
@@ -119,8 +120,15 @@ const texture = new THREE.TextureLoader().load(
                     raycaster.setFromCamera(pointer, camera)
                     const intersects = raycaster.intersectObject(model);
                     if (intersects.length > 0) {
-                        goalCube.position.copy(intersects[0].point)
-                        goalCube.position.z = 2
+                        console.log(intersects[0].point)
+                        if (intersects[0].point.z == 0){
+                            goalCube.position.copy(intersects[0].point)
+                            goalCube.position.z = 2;
+                            goalPosition[0] = (-1) * (Math.round(goalCube.position.y) - yOffset)
+                            goalPosition[1] = Math.round(goalCube.position.x) - xOffset
+                            console.log(goalPosition)
+                        }
+                        
                     }
 
                 }
