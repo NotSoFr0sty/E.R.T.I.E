@@ -58,6 +58,16 @@ const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
 controls.screenSpacePanning = true;
 
+// For raycasting
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+const cubeGeometry = new THREE.BoxGeometry(10, 10, 10);
+const goalCubeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+// const startCubeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 })
+const goalCube = new THREE.Mesh(cubeGeometry, goalCubeMaterial)
+// const startCube = new THREE.Mesh(cubeGeometry, startCubeMaterial)
+scene.add(goalCube)
+// scene.add(startCube)
 
 //Define Plane Texture
 let floorPlanWidth = 0
@@ -86,19 +96,35 @@ const texture = new THREE.TextureLoader().load(
         plane.position.set(0, 0, 2)
 
         // Geometry - Model
-        // const material = new THREE.MeshPhongMaterial({
-        //     color: 0x404040, shininess: 10, side: THREE.DoubleSide
-        // })
-        const material = new THREE.MeshStandardMaterial({
+        const modelMaterial = new THREE.MeshStandardMaterial({
             side: THREE.DoubleSide, color: 0x292929
         })
         const loader = new STLLoader()
         loader.load(
             '/static/models/model.stl',
             function (geometry) {
-                const mesh = new THREE.Mesh(geometry, material)
-                scene.add(mesh)
-                mesh.position.set(xOffset, yOffset, 0)
+                const model = new THREE.Mesh(geometry, modelMaterial)
+                scene.add(model)
+                model.position.set(xOffset, yOffset, 0)
+
+                // Raycasting
+                function onPointerClick(event) {
+
+                    // calculate pointer position in normalized device coordinates
+                    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+                    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                    // console.log(pointer.x)
+                    // console.log(pointer.y)
+
+                    raycaster.setFromCamera(pointer, camera)
+                    const intersects = raycaster.intersectObject(model);
+                    if (intersects.length > 0) {
+                        goalCube.position.copy(intersects[0].point)
+                        goalCube.position.z = 2
+                    }
+
+                }
+                window.addEventListener('click', onPointerClick)
             },
             (xhr) => {
                 console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
@@ -118,35 +144,6 @@ const texture = new THREE.TextureLoader().load(
 
     }
 );
-// const planeMaterial = new THREE.MeshPhongMaterial({
-//     map: texture, shininess: 150
-// });
-// const planeGeometry = new THREE.PlaneGeometry(
-//     floorPlanWidth, floorPlanHeight
-// )
-// const plane = new THREE.Mesh(planeGeometry, planeMaterial)
-// scene.add(plane)
-// plane.position.set(0, 0, 2)
-
-// Geometry - Model
-// const material = new THREE.MeshPhongMaterial({
-//     color: 0x404040, shininess: 10, side: THREE.DoubleSide
-// })
-// const loader = new STLLoader()
-// loader.load(
-//     '/static/models/model.stl',
-//     function (geometry) {
-//         const mesh = new THREE.Mesh(geometry, material)
-//         scene.add(mesh)
-//         mesh.position.set(xOffset, yOffset, 0)
-//     },
-//     (xhr) => {
-//         console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-//     },
-//     (error) => {
-//         console.log(error)
-//     }
-// )
 
 // Resizer
 window.addEventListener('resize', onWindowResize, false)
@@ -163,6 +160,8 @@ function animate(){
     controls.update();
     render();
 }
+
+
 
 function render() {
     renderer.render(scene, camera)
