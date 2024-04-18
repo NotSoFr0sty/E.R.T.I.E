@@ -70,6 +70,10 @@ scene.add(goalCube)
 scene.add(startCube)
 let goalPosition = [0,0]
 let startPosition = [0,0]
+// For distinguishing mouse clicks from drags
+const delta = 6;
+let startX;
+let startY;
 
 //Define Plane Texture
 let floorPlanWidth = 0
@@ -110,7 +114,17 @@ const texture = new THREE.TextureLoader().load(
                 model.position.set(xOffset, yOffset, 0)
 
                 // Raycasting
-                function onPointerClick(event) {
+                function onPointerDown(event){
+                    startX = event.pageX
+                    startY = event.pageY
+                }
+                function onPointerUp(event) {
+                    const diffX = Math.abs(event.pageX - startX);
+                    const diffY = Math.abs(event.pageY - startY);
+                    // If it's not a mouseClick, then exit
+                    if (!(diffX < delta && diffY < delta)){
+                        return
+                    }
 
                     // calculate pointer position in normalized device coordinates
                     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -122,7 +136,7 @@ const texture = new THREE.TextureLoader().load(
                     const intersects = raycaster.intersectObject(model);
                     if (intersects.length > 0) {
                         console.log(intersects[0].point)
-                        if (intersects[0].point.z == 0){
+                        if (intersects[0].point.z < 1){
                             switch(event.button){
                                 // Left click
                                 case 0:
@@ -149,7 +163,8 @@ const texture = new THREE.TextureLoader().load(
 
                 }
                 // window.addEventListener('click', onPointerClick)
-                window.addEventListener('pointerup', onPointerClick)
+                window.addEventListener('pointerdown', onPointerDown)
+                window.addEventListener('pointerup', onPointerUp)
             },
             (xhr) => {
                 console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
