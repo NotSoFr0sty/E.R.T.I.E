@@ -22,6 +22,7 @@
     <img src="/static/floor-plans/{{ locIndex }}.jpg">
     <form action="/render">
         <input type="hidden" name="location" value="{{locIndex}}">
+        <input type="hidden" name="pathFound" value="0">
         <button type="submit">Generate 3D Model</button>
     </form>
 {% endblock %}

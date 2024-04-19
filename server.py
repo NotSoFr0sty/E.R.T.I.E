@@ -57,10 +57,13 @@ def uploadFloorPlan():
 
 @app.route('/render')
 def createModel():
+    if (int(request.args.get('pathFound'))): # If pathFound is true, then no need to create the model again.
+        return render_template('render.html')
+    
+    # For generating model
     locIndex = request.args.get('location')
     processedImage = processFloorPlan(f'static/floor-plans/{locIndex}.jpg')
     convertTo3D(processedImage)
-
     return render_template('render.html')
 
 if __name__ == "__main__":

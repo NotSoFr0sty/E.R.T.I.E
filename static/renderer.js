@@ -9,6 +9,7 @@ import { GUI } from 'https://cdn.skypack.dev/dat.gui';
 var url_string = window.location.href
 var url = new URL(url_string);
 var locIndex = url.searchParams.get("location");
+let pathFound = Number(url.searchParams.get("pathFound"));
 
 // Scene
 const scene = new THREE.Scene();
@@ -105,8 +106,10 @@ let floorPlanWidth = 0
 let floorPlanHeight = 0
 let xOffset = 0
 let yOffset = 0
+const floorPlanFilePath = pathFound ? (`/static/floor-plans/path.png`) : (`/static/floor-plans/${locIndex}.jpg`);
+console.log(floorPlanFilePath)
 const texture = new THREE.TextureLoader().load(
-    `/static/floor-plans/${locIndex}.jpg`, function(texture){
+    floorPlanFilePath, function(texture){
         console.log(texture.image.width);
         console.log(texture.image.height);
         floorPlanWidth = texture.image.width
@@ -148,7 +151,7 @@ const texture = new THREE.TextureLoader().load(
                     if (pathfindingParams.isPathfindingActive === false){
                         return
                     }
-                    
+
                     // If it's not a mouseClick, then return.
                     const diffX = Math.abs(event.pageX - startX);
                     const diffY = Math.abs(event.pageY - startY);
