@@ -196,8 +196,8 @@ const texture = new THREE.TextureLoader().load(
 
                 }
                 // window.addEventListener('click', onPointerClick)
-                window.addEventListener('pointerdown', onPointerDown)
-                window.addEventListener('pointerup', onPointerUp)
+                renderer.domElement.addEventListener('pointerdown', onPointerDown)
+                renderer.domElement.addEventListener('pointerup', onPointerUp)
             },
             (xhr) => {
                 console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
