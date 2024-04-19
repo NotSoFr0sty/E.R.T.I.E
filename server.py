@@ -58,6 +58,7 @@ def uploadFloorPlan():
 @app.route('/render')
 def createModel():
     if (int(request.args.get('pathFound'))): # If pathFound is true, then no need to create the model again.
+        
         return render_template('render.html')
     
     # For generating model

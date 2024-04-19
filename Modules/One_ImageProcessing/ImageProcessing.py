@@ -85,7 +85,7 @@ def processFloorPlan(inputPath):
     # cv.imshow('Processed Floorplan', denoisedImg)
 
     #save image
-    # cv.imwrite('Floorplans/Output.png', denoisedImg)
+    cv.imwrite('static/floor-plans/processed.png', denoisedImg)
 
     return denoisedImg
     # cv.waitKey(0)
