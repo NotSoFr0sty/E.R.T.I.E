@@ -86,9 +86,14 @@ let pathfindingParams = {
     isPathfindingActive: false,
     submitPathfindingImageCoordinates: false
 };
+let submitButton = {
+    submitForm:function(){
+        document.forms[0].submit()
+    }
+}
 pathfindingGUI
     .add(pathfindingParams, "isPathfindingActive")
-    .name("Enable Pathfinding")
+    .name("Enable pathfinding")
     .onChange(
         function(){ // show/hide the pathfinding marker cubes
             if (pathfindingParams.isPathfindingActive){
@@ -100,6 +105,9 @@ pathfindingGUI
             }
         }
     )
+
+pathfindingGUI.add(submitButton, "submitForm").name("Calculate path")
+
 
 //Define Plane Texture
 let floorPlanWidth = 0
@@ -178,6 +186,8 @@ const texture = new THREE.TextureLoader().load(
                                     goalPosition[0] = (-1) * (Math.round(goalCube.position.y) - yOffset)
                                     goalPosition[1] = Math.round(goalCube.position.x) - xOffset
                                     console.log("Goal Position: " + goalPosition)
+                                    document.getElementById("goalX").value = goalPosition[0].toString();
+                                    document.getElementById("goalY").value = goalPosition[1].toString();
                                     break;
                                 
                                 // Right click
@@ -187,6 +197,8 @@ const texture = new THREE.TextureLoader().load(
                                     startPosition[0] = (-1) * (Math.round(startCube.position.y) - yOffset)
                                     startPosition[1] = Math.round(startCube.position.x) - xOffset
                                     console.log("Start Position: " + startPosition)
+                                    document.getElementById("startX").value = startPosition[0].toString();
+                                    document.getElementById("startY").value = startPosition[1].toString();
                                     break;
                             }
                             

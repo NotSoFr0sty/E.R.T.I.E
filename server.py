@@ -64,7 +64,7 @@ def createModel():
     locIndex = request.args.get('location')
     processedImage = processFloorPlan(f'static/floor-plans/{locIndex}.jpg')
     convertTo3D(processedImage)
-    return render_template('render.html')
+    return render_template('render.html', locIndex=locIndex)
 
 if __name__ == "__main__":
     serve(app, host="0.0.0.0", port=8000)

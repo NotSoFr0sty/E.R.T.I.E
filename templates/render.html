@@ -5,8 +5,16 @@
 {% endblock %}
 
 {% block body %}
+    <form action="/render" id="pathfindingForm">
+        <input type="hidden" id="location" name="location" value="{{locIndex}}">
+        <input type="hidden" id="pathFound" name="pathFound" value="1">
+        <input type="hidden" id="goalX" name="goalX" value="0">
+        <input type="hidden" id="goalY" name="goalY" value="0">
+        <input type="hidden" id="startX" name="startX" value="0">
+        <input type="hidden" id="startY" name="startY" value="0">
+        <button type="submit">Calculate path</button>
+    </form>
+
     <canvas id="bg"></canvas>
     <script type="module" src="/static/renderer.js"></script>
-
-    <!-- <form action="/render" -->
 {% endblock %}
