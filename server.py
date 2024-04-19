@@ -8,6 +8,7 @@ import os
 import cv2 as cv
 from Modules.One_ImageProcessing.ImageProcessing import processFloorPlan
 from Modules.Two_2Dto3D.my2Dto3D import convertTo3D
+from Modules.Three_Pathfinding.v1 import calculatePath
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'NotSoFr0sty'
@@ -58,8 +59,11 @@ def uploadFloorPlan():
 @app.route('/render')
 def createModel():
     if (int(request.args.get('pathFound'))): # If pathFound is true, then no need to create the model again.
-        
-        return render_template('render.html')
+        goal = [int(request.args.get('goalX')), int(request.args.get('goalY'))]
+        start = [int(request.args.get('startX')), int(request.args.get('startY'))]
+        locIndex = request.args.get('location')
+        calculatePath(goal, start, locIndex)
+        return render_template('render.html', locIndex=locIndex)
     
     # For generating model
     locIndex = request.args.get('location')

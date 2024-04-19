@@ -292,6 +292,7 @@ def main():
             raise SystemExit
         return mousePos
 
+    floorPlanNum = 2
     # read testFP in grayscale mode #FIXME: Comments are out of date.
     originalFPImg = cv.imread(f'Floorplans/{floorPlanNum}.jpg')
     ogRows = originalFPImg.shape[0]
@@ -673,6 +674,12 @@ def calculatePath(goal, start, locIndex):
     img = cv.resize(inputImg, (0,0), fx=0.30, fy=0.30, interpolation=cv.INTER_NEAREST)
     # resizedOriginalFPImg = cv.resize(originalFPImg, (0,0), fx=0.30, fy=0.30, interpolation=cv.INTER_NEAREST)
 
+    # scale down goal and start values (multiply by 0.30)
+    goal[0] = round(goal[0]*0.30)
+    goal[1] = round(goal[1]*0.30)
+    start[0] = round(start[0]*0.30)
+    start[1] = round(start[1]*0.30)
+
     # get dimensions of the input image
     rows, cols = img.shape
 
@@ -692,6 +699,7 @@ def calculatePath(goal, start, locIndex):
         img[goal[0], goal[1]]
     except IndexError:
         print("Goal node is out of image bounds! Setting default goal position...")
+        print(goal)
         goal = [rows-1, cols-1]
     # if the goal node is not traversable, then exit
     if not findNodeHavingCoords(goal).isTraversable():
@@ -704,6 +712,7 @@ def calculatePath(goal, start, locIndex):
         img[start[0], start[1]]
     except IndexError:
         print("Start node is out of image bounds! Setting default start position [0,0]...")
+        print(start)
         start = [0,0]
 
     open = []

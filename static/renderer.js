@@ -183,8 +183,8 @@ const texture = new THREE.TextureLoader().load(
                                 case 0:
                                     goalCube.position.copy(intersects[0].point)
                                     goalCube.position.z = 2;
-                                    goalPosition[0] = (-1) * (Math.round(goalCube.position.y) - yOffset)
-                                    goalPosition[1] = Math.round(goalCube.position.x) - xOffset
+                                    goalPosition[0] = (-1) * (Math.round((goalCube.position.y) - yOffset))
+                                    goalPosition[1] = Math.round((goalCube.position.x) - xOffset)
                                     console.log("Goal Position: " + goalPosition)
                                     document.getElementById("goalX").value = goalPosition[0].toString();
                                     document.getElementById("goalY").value = goalPosition[1].toString();
@@ -194,8 +194,8 @@ const texture = new THREE.TextureLoader().load(
                                 case 2:
                                     startCube.position.copy(intersects[0].point)
                                     startCube.position.z = 2;
-                                    startPosition[0] = (-1) * (Math.round(startCube.position.y) - yOffset)
-                                    startPosition[1] = Math.round(startCube.position.x) - xOffset
+                                    startPosition[0] = (-1) * (Math.round((startCube.position.y) - yOffset))
+                                    startPosition[1] = Math.round((startCube.position.x) - xOffset)
                                     console.log("Start Position: " + startPosition)
                                     document.getElementById("startX").value = startPosition[0].toString();
                                     document.getElementById("startY").value = startPosition[1].toString();
