@@ -4,6 +4,7 @@
 import * as THREE from 'https://cdn.skypack.dev/three@0.132.2'
 import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.110.0/examples/jsm/loaders/STLLoader.js'
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.110.0/examples/jsm/controls/OrbitControls.js'
+import { GUI } from 'https://cdn.skypack.dev/dat.gui';
 
 var url_string = window.location.href
 var url = new URL(url_string);
@@ -68,12 +69,36 @@ const goalCube = new THREE.Mesh(cubeGeometry, goalCubeMaterial)
 const startCube = new THREE.Mesh(cubeGeometry, startCubeMaterial)
 scene.add(goalCube)
 scene.add(startCube)
+goalCube.visible = false;
+startCube.visible = false;
 let goalPosition = [0,0]
 let startPosition = [0,0]
 // For distinguishing mouse clicks from drags
 const delta = 6;
 let startX;
 let startY;
+
+// GUI
+const gui = new GUI();
+const pathfindingGUI = gui.addFolder('Pathfinding')
+let pathfindingParams = {
+    isPathfindingActive: false,
+    submitPathfindingImageCoordinates: false
+};
+pathfindingGUI
+    .add(pathfindingParams, "isPathfindingActive")
+    .name("Enable Pathfinding")
+    .onChange(
+        function(){ // show/hide the pathfinding marker cubes
+            if (pathfindingParams.isPathfindingActive){
+                goalCube.visible = true;
+                startCube.visible = true;
+            } else{
+                goalCube.visible = false;
+                startCube.visible = false;
+            }
+        }
+    )
 
 //Define Plane Texture
 let floorPlanWidth = 0
@@ -119,9 +144,14 @@ const texture = new THREE.TextureLoader().load(
                     startY = event.pageY
                 }
                 function onPointerUp(event) {
+                    // If pathfinding isn't enabled, then return.
+                    if (pathfindingParams.isPathfindingActive === false){
+                        return
+                    }
+                    
+                    // If it's not a mouseClick, then return.
                     const diffX = Math.abs(event.pageX - startX);
                     const diffY = Math.abs(event.pageY - startY);
-                    // If it's not a mouseClick, then exit
                     if (!(diffX < delta && diffY < delta)){
                         return
                     }
