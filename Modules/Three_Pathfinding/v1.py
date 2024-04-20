@@ -619,6 +619,7 @@ def calculatePath(goal, start, locIndex):
         #                 img[x,y] = [0,0,255]
         for node in pathNodes:
             img[node.xCoord, node.yCoord] = [0,0,255]
+        img[pathNodes[0].xCoord, pathNodes[0].yCoord] = [0, 255, 0]
         return img
 
     def overlayPath(img, fp):
@@ -638,6 +639,8 @@ def calculatePath(goal, start, locIndex):
                 
                 if (img[x,y] == [0,0,255]).all(): #if pixel is red
                     fp[x,y] = [0,0,255]
+                if (img[x,y] == [0,255,0]).all(): #if pixel is green
+                    fp[x,y] = [0,255,0]
         return fp
 
     def onMouse(event, x, y, flags, param):
