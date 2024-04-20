@@ -117,6 +117,21 @@ pathfindingGUI
                 submitButton = pathfindingGUI.add(submitButtonParams, "submitForm").name("Calculate path")
                 // set active camera to orthocam
                 activeCamera = cameraOrtho
+                // Update orthocam
+                cameraOrtho.left = window.innerWidth / -2
+                cameraOrtho.right = window.innerWidth / 2
+                cameraOrtho.top = window.innerHeight / 2
+                cameraOrtho.bottom = window.innerHeight / -2
+                // if biggerdimensionoffloorplan is defined then update orthocam
+                if (biggerDimensionOfFloorPlan != null) {
+                    let aspect = window.innerWidth / window.innerHeight;
+                    if (aspect > 1.0) {
+                        cameraOrtho.zoom = window.innerHeight / biggerDimensionOfFloorPlan;
+                    } else {
+                        cameraOrtho.zoom = window.innerWidth / biggerDimensionOfFloorPlan;
+                    }
+                }
+                cameraOrtho.updateProjectionMatrix();
             } else{
                 goalCube.visible = false;
                 startCube.visible = false;
@@ -165,6 +180,12 @@ const texture = new THREE.TextureLoader().load(
         xOffset = (-1)*(floorPlanWidth/2)
         yOffset = (floorPlanHeight/2)
         biggerDimensionOfFloorPlan = floorPlanWidth>floorPlanHeight?floorPlanWidth:floorPlanHeight
+        goalPosition = [Math.round(floorPlanHeight/2),Math.round(floorPlanWidth/2)]
+        startPosition = [Math.round(floorPlanHeight/2),Math.round(floorPlanWidth/2)]
+        document.getElementById("goalX").value = goalPosition[0].toString();
+        document.getElementById("goalY").value = goalPosition[1].toString();
+        document.getElementById("startX").value = startPosition[0].toString();
+        document.getElementById("startY").value = startPosition[1].toString();
 
         // Orthocam
         // cameraOrtho = new THREE.OrthographicCamera(

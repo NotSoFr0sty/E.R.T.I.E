@@ -665,7 +665,7 @@ def calculatePath(goal, start, locIndex):
             mousePos[1] = round(mousePos[1]*0.3)
         except NameError:
             print("Failed to set position, exiting...")
-            raise SystemExit
+            return
         return mousePos
 
     # read testFP in grayscale mode #FIXME: Comments are out of date.
@@ -704,10 +704,16 @@ def calculatePath(goal, start, locIndex):
         print("Goal node is out of image bounds! Setting default goal position...")
         print(goal)
         goal = [rows-1, cols-1]
+        if not findNodeHavingCoords(goal).isTraversable():
+            print("Goal node is not traversable! Returning...")
+            return
     # if the goal node is not traversable, then exit
     if not findNodeHavingCoords(goal).isTraversable():
-        print("Goal node is not traversable!")
-        raise SystemExit
+        print("Goal node is not traversable! Setting default goal position...")
+        goal = [rows-1, cols-1]
+        if not findNodeHavingCoords(goal).isTraversable():
+            print("Goal node is not traversable, yet again! Returning...")
+            return
 
     print("Click anywhere to set the start position.")
     # start = setPosWithMouse(originalFPImg, 'Rescue Team')      
@@ -717,6 +723,13 @@ def calculatePath(goal, start, locIndex):
         print("Start node is out of image bounds! Setting default start position [0,0]...")
         print(start)
         start = [0,0]
+        if not findNodeHavingCoords(start).isTraversable():
+            print("Start node is not traversable, yet again! Returning...")
+            return
+    # if the start node is not traversable, then exit
+    if not findNodeHavingCoords(start).isTraversable():
+            print("Start node is not traversable, yet again! Returning...")
+            return
 
     open = []
     closed = []
@@ -736,7 +749,7 @@ def calculatePath(goal, start, locIndex):
             current = sorted(open)[0]
         except IndexError:
             print("A path could not be found.")
-            raise SystemExit
+            return
         # remove current from open
         open.remove(current)
         # add current to closed
