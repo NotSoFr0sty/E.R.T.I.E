@@ -106,6 +106,15 @@ let submitButtonParams = {
         document.forms[0].submit()
     }
 }
+let clearPathButtonParams = {
+    clearPath: function(){
+        document.getElementById("goalX").value = "0"
+        document.getElementById("goalY").value = "0"
+        document.getElementById("startX").value = "0"
+        document.getElementById("startY").value = "0"
+        document.forms[0].submit()
+    }
+}
 let submitButton;
 pathfindingGUI
     .add(pathfindingParams, "isPathfindingActive")
@@ -141,7 +150,8 @@ pathfindingGUI
             }
         }
     )
-// Camera GUI
+pathfindingGUI.add(clearPathButtonParams, "clearPath").name("Clear path");
+    // Camera GUI
 let cameraParams = {
     resetCamera:function(){
         controls.reset();
