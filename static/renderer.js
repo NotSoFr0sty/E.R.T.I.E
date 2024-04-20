@@ -48,7 +48,15 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.setZ(500);
 let activeCamera = camera;
 // Orthographic camera
-let cameraOrtho
+let cameraOrtho = new THREE.OrthographicCamera(
+    window.innerWidth / -2,
+    window.innerWidth / 2,
+    window.innerHeight / 2,
+    window.innerHeight / -2,
+    0.1,
+    1000
+);
+cameraOrtho.position.setZ(500);
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
@@ -154,19 +162,18 @@ const texture = new THREE.TextureLoader().load(
         floorPlanHeight = texture.image.height
         xOffset = (-1)*(floorPlanWidth/2)
         yOffset = (floorPlanHeight/2)
-        // biggerDimensionOfFloorPlan = floorPlanWidth>floorPlanHeight?floorPlanWidth:floorPlanHeight
+        biggerDimensionOfFloorPlan = floorPlanWidth>floorPlanHeight?floorPlanWidth:floorPlanHeight
 
         // Orthocam
-        cameraOrtho = new THREE.OrthographicCamera(
-            floorPlanWidth / -2,
-            floorPlanWidth / 2,
-            floorPlanHeight / 2,
-            floorPlanHeight / -2,
-            0.1,
-            1000
+        // cameraOrtho = new THREE.OrthographicCamera(
+        //     floorPlanWidth / -2,
+        //     floorPlanWidth / 2,
+        //     floorPlanHeight / 2,
+        //     floorPlanHeight / -2,
+        //     0.1,
+        //     1000
 
-        );
-        cameraOrtho.position.setZ(500);
+        // );
 
         // Geometry - Floor plan
         const planeMaterial = new THREE.MeshPhongMaterial({
@@ -268,7 +275,7 @@ const texture = new THREE.TextureLoader().load(
         light4.position.set(0, -yOffset, 500)
 
         // Update camera position
-        camera.position.setZ(floorPlanWidth>floorPlanHeight ? (floorPlanWidth/2):(floorPlanHeight/2));
+        camera.position.setZ(floorPlanWidth>floorPlanHeight ? (floorPlanWidth):(floorPlanHeight));
 
     }
 );
@@ -276,13 +283,25 @@ const texture = new THREE.TextureLoader().load(
 // Resizer
 window.addEventListener('resize', onWindowResize, false)
 function onWindowResize() {
+    // Update perspective cam
     camera.aspect = window.innerWidth / window.innerHeight
     camera.updateProjectionMatrix()
-    // cameraOrtho.left = window.innerWidth / -2
-    // cameraOrtho.right = window.innerWidth / 2
-    // cameraOrtho.top = window.innerHeight / 2
-    // cameraOrtho.bottom = window.innerHeight / -2
-    // cameraOrtho.updateProjectionMatrix();
+
+    // Update orthocam
+    cameraOrtho.left = window.innerWidth / -2
+    cameraOrtho.right = window.innerWidth / 2
+    cameraOrtho.top = window.innerHeight / 2
+    cameraOrtho.bottom = window.innerHeight / -2
+    // if biggerdimensionoffloorplan is defined then update orthocam
+    if (biggerDimensionOfFloorPlan != null) {
+        let aspect = window.innerWidth/window.innerHeight;
+        if (aspect > 1.0){
+            cameraOrtho.zoom = window.innerHeight/biggerDimensionOfFloorPlan;
+        } else{
+            cameraOrtho.zoom = window.innerWidth/biggerDimensionOfFloorPlan;
+        }
+    }
+    cameraOrtho.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight)
     render()
 }
