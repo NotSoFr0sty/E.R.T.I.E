@@ -10,6 +10,7 @@ var url_string = window.location.href
 var url = new URL(url_string);
 var locIndex = url.searchParams.get("location");
 let pathFound = Number(url.searchParams.get("pathFound"));
+let biggerDimensionOfFloorPlan
 
 // Scene
 const scene = new THREE.Scene();
@@ -36,13 +37,18 @@ const light4 = new THREE.PointLight()
 light4.intensity = 0.1
 scene.add(light4)
 
-// Camera
+// Cameras
+// Perspective camera
 const camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
     0.1,
     5000
 );
+camera.position.setZ(500);
+let activeCamera = camera;
+// Orthographic camera
+let cameraOrtho
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
@@ -51,9 +57,6 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-camera.position.setZ(500);
-// camera.position.setX(100);
-// camera.position.setY(-100);
 
 // Orbit Controls
 const controls = new OrbitControls(camera, renderer.domElement)
@@ -102,10 +105,13 @@ pathfindingGUI
                 goalCube.visible = true;
                 startCube.visible = true;
                 submitButton = pathfindingGUI.add(submitButtonParams, "submitForm").name("Calculate path")
+                // set active camera to orthocam
+                activeCamera = cameraOrtho
             } else{
                 goalCube.visible = false;
                 startCube.visible = false;
                 pathfindingGUI.remove(submitButton)
+                activeCamera = camera
             }
         }
     )
@@ -148,7 +154,20 @@ const texture = new THREE.TextureLoader().load(
         floorPlanHeight = texture.image.height
         xOffset = (-1)*(floorPlanWidth/2)
         yOffset = (floorPlanHeight/2)
-        
+        // biggerDimensionOfFloorPlan = floorPlanWidth>floorPlanHeight?floorPlanWidth:floorPlanHeight
+
+        // Orthocam
+        cameraOrtho = new THREE.OrthographicCamera(
+            floorPlanWidth / -2,
+            floorPlanWidth / 2,
+            floorPlanHeight / 2,
+            floorPlanHeight / -2,
+            0.1,
+            1000
+
+        );
+        cameraOrtho.position.setZ(500);
+
         // Geometry - Floor plan
         const planeMaterial = new THREE.MeshPhongMaterial({
             map: texture, shininess: 150
@@ -197,7 +216,7 @@ const texture = new THREE.TextureLoader().load(
                     // console.log(pointer.x)
                     // console.log(pointer.y)
 
-                    raycaster.setFromCamera(pointer, camera)
+                    raycaster.setFromCamera(pointer, activeCamera)
                     const intersects = raycaster.intersectObject(model);
                     if (intersects.length > 0) {
                         console.log(intersects[0].point)
@@ -259,6 +278,11 @@ window.addEventListener('resize', onWindowResize, false)
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight
     camera.updateProjectionMatrix()
+    // cameraOrtho.left = window.innerWidth / -2
+    // cameraOrtho.right = window.innerWidth / 2
+    // cameraOrtho.top = window.innerHeight / 2
+    // cameraOrtho.bottom = window.innerHeight / -2
+    // cameraOrtho.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight)
     render()
 }
@@ -273,7 +297,7 @@ function animate(){
 
 
 function render() {
-    renderer.render(scene, camera)
+    renderer.render(scene, activeCamera)
 }
 
 animate()
