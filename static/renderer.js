@@ -77,10 +77,11 @@ controls.maxAzimuthAngle = 1.5708
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 const cubeGeometry = new THREE.BoxGeometry(10, 10, 10);
+const cubeGeometry2 = new THREE.BoxGeometry(9, 9, 9);
 const goalCubeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
 const startCubeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 })
 const goalCube = new THREE.Mesh(cubeGeometry, goalCubeMaterial)
-const startCube = new THREE.Mesh(cubeGeometry, startCubeMaterial)
+const startCube = new THREE.Mesh(cubeGeometry2, startCubeMaterial)
 scene.add(startCube)
 scene.add(goalCube)
 goalCube.position.setZ(2)
@@ -155,6 +156,7 @@ pathfindingGUI.add(clearPathButtonParams, "clearPath").name("Clear path");
 let cameraParams = {
     resetCamera:function(){
         controls.reset();
+        activeCamera = camera;
     }
 }
 const cameraGUI = gui.addFolder('Camera')
