@@ -19,6 +19,7 @@ class UploadFileForm(FlaskForm):
     submit = SubmitField("Upload Floor Plan")
 
 @app.route('/')
+@app.route('/home')
 @app.route('/index')
 def index():
 
@@ -36,6 +37,8 @@ def selectFloorPlan():
         "upload": "Custom Floor Plan"
     }
     locIndex = request.args.get('location')
+    if locIndex == None:
+        return redirect('/index')
     location = locDict[locIndex]
 
     if (locIndex=='upload'):

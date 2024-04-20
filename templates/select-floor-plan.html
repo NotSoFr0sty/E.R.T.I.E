@@ -8,12 +8,13 @@
     <h1>E.R.T.I.E.</h1>
     <form action="/select-floor-plan">
         <label for="location">Select the location:</label>
-        <select id="location" name="location">
-            <option value="1">House 1</option>
-            <option value="2">House 2</option>
-            <option value="3">House 3</option>
-            <option value="4">Shopping Mall</option>
-            <option value="upload">Upload custom floor plan</option>
+        <select id="location" name="location" defaultValue="{{ locIndex }}">
+            <option selected disabled hidden>Select</option>
+            <option id="1" value="1">House 1</option>
+            <option id="2" value="2">House 2</option>
+            <option id="3" value="3">House 3</option>
+            <option id="4" value="4">Shopping Mall</option>
+            <option id="upload" value="upload">Upload custom floor plan</option>
         </select>
         <button type="submit">View</button>
     </form>
@@ -25,4 +26,8 @@
         <input type="hidden" name="pathFound" value="0">
         <button type="submit">Generate 3D Model</button>
     </form>
+
+    <script>
+        document.getElementById("{{locIndex}}").selected = "selected"
+    </script>
 {% endblock %}
