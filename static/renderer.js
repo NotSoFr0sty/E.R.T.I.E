@@ -81,8 +81,9 @@ const goalCubeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
 const startCubeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 })
 const goalCube = new THREE.Mesh(cubeGeometry, goalCubeMaterial)
 const startCube = new THREE.Mesh(cubeGeometry, startCubeMaterial)
-scene.add(goalCube)
 scene.add(startCube)
+scene.add(goalCube)
+goalCube.position.setZ(2)
 goalCube.visible = false;
 startCube.visible = false;
 let goalPosition = [0,0]
