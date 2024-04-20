@@ -70,6 +70,8 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
 controls.screenSpacePanning = true;
+controls.minAzimuthAngle = -1.5708
+controls.maxAzimuthAngle = 1.5708
 
 // For raycasting
 const raycaster = new THREE.Raycaster();
