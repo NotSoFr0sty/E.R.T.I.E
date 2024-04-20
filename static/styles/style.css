@@ -28,12 +28,37 @@ canvas{
     left: 0;
 }
 
-#info{
+.collapsible {
+    background-color: #434343;
+    color: whitesmoke;
+    cursor: pointer;
+    
+    padding: 18px;
+    width: 80px;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 15px;
+
     position: absolute;
-    top: 10px;
-    width: 100%;
+    top:10px;
+    display: block;
+    z-index: 99
+}
+
+.active, .collapsible:hover {
+    background-color: gray;
+}
+
+#info {
+    position: absolute;
+    top: 20px;
+    left: 100px;
+    width: 33%;
     text-align: left;
     z-index: 99;
     display: block;
-    color: whitesmoke
+    color: whitesmoke;
+    display: none;
+    overflow: hidden;
 }
