@@ -51,7 +51,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-camera.position.setZ(100);
+camera.position.setZ(500);
 // camera.position.setX(100);
 // camera.position.setY(-100);
 
@@ -81,6 +81,7 @@ let startY;
 
 // GUI
 const gui = new GUI();
+// Pathfinding GUI
 const pathfindingGUI = gui.addFolder('Pathfinding')
 let pathfindingParams = {
     isPathfindingActive: false,
@@ -108,7 +109,14 @@ pathfindingGUI
             }
         }
     )
-//pathfindingGUI.add(submitButton, "submitForm").name("Calculate path")
+// Camera GUI
+let cameraParams = {
+    resetCamera:function(){
+        controls.reset();
+    }
+}
+const cameraGUI = gui.addFolder('Camera')
+cameraGUI.add(cameraParams, "resetCamera").name("Reset camera")
 
 // Normal UI
 let collapsible = document.getElementsByClassName("collapsible");
