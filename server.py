@@ -38,7 +38,7 @@ def selectFloorPlan():
     }
     locIndex = request.args.get('location')
     if locIndex == None:
-        return redirect('/index')
+        return redirect('/home')
     location = locDict[locIndex]
 
     if (locIndex=='upload'):
