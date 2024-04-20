@@ -27,3 +27,13 @@ canvas{
     top: 0;
     left: 0;
 }
+
+#info{
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    text-align: center;
+    z-index: 99;
+    display: block;
+    color: whitesmoke
+}
