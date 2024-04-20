@@ -86,27 +86,30 @@ let pathfindingParams = {
     isPathfindingActive: false,
     submitPathfindingImageCoordinates: false
 };
-let submitButton = {
+let submitButtonParams = {
     submitForm:function(){
         document.forms[0].submit()
     }
 }
+let submitButton;
 pathfindingGUI
     .add(pathfindingParams, "isPathfindingActive")
     .name("Enable pathfinding")
     .onChange(
-        function(){ // show/hide the pathfinding marker cubes
+        function(){ // show/hide the pathfinding marker cubes + Calculate path button
             if (pathfindingParams.isPathfindingActive){
                 goalCube.visible = true;
                 startCube.visible = true;
+                submitButton = pathfindingGUI.add(submitButtonParams, "submitForm").name("Calculate path")
             } else{
                 goalCube.visible = false;
                 startCube.visible = false;
+                pathfindingGUI.remove(submitButton)
             }
         }
     )
+//pathfindingGUI.add(submitButton, "submitForm").name("Calculate path")
 
-pathfindingGUI.add(submitButton, "submitForm").name("Calculate path")
 // Normal UI
 let collapsible = document.getElementsByClassName("collapsible");
 let i;
