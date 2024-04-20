@@ -33,7 +33,7 @@ canvas{
     color: whitesmoke;
     cursor: pointer;
     
-    padding: 18px;
+    padding: 10px;
     width: 80px;
     border: none;
     text-align: center;
@@ -41,7 +41,8 @@ canvas{
     font-size: 15px;
 
     position: absolute;
-    top:10px;
+    top: 10px;
+    left: 10px;
     display: block;
     z-index: 99
 }
@@ -52,7 +53,7 @@ canvas{
 
 #info {
     position: absolute;
-    top: 20px;
+    top: 10px;
     left: 100px;
     width: 33%;
     text-align: left;
