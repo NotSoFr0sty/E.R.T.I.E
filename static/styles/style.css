@@ -39,12 +39,44 @@ body {
     color: white
 }
 
-#subHeader {
-    font-size: 4rem;
+.fugaz-one-regular {
+    font-family: "Fugaz One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.m-0 {
+    font-family: "Fugaz One", sans-serif;
+
+    position: relative;
+    left: 5rem;
+}
+
+.contactCard {
+    position: relative;
+    bottom: 50px;
+}
+
+/* .navbar-dark,
+.navbar[data-bs-theme=dark] {
+    position: fixed
+} */
+
+#navbarNav {
+    margin: auto;
+    width: 50%;
+    position: relative;
+    right: 75px;
+
 }
 
 #subHeader {
-    margin: 10rem 0 0 5rem;
+    font-size: 2rem;
+    /* font-family: "Fugaz One", sans-serif; */
+}
+
+#subHeader {
+    margin: 5rem 0 0 5rem;
 }
 
 .customMargin {
@@ -54,6 +86,8 @@ body {
 
 .contactCard {
     background-color: #0000007f;
+    position: relative;
+    bottom: 150px;
 }
 
 .btn.btn-danger {
