@@ -18,11 +18,12 @@ class UploadFileForm(FlaskForm):
     file = FileField("File", validators=[InputRequired()])
     submit = SubmitField("Upload Floor Plan")
 
+print("Server is online at localhost:8000")
+
 @app.route('/')
 @app.route('/home')
 @app.route('/index')
 def index():
-
     return render_template('index.html')
     # return render_template('render.html')
 
