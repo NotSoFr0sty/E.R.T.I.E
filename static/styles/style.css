@@ -35,6 +35,11 @@ body {
     font-weight: bold;
 }
 
+.about {
+    position:relative;
+    margin: 0 50% 0 0;
+}
+
 .card-body {
     color: white
 }
