@@ -22,6 +22,49 @@ input, button {
     border-radius: 10px;
 } */
 
+/* Hrithik's CSS Stuff below */
+body {
+    background-image: url('../images/fireFighter.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: rgb(255, 255, 255);
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+.card-body {
+    color: white
+}
+
+#subHeader {
+    font-size: 4rem;
+}
+
+#subHeader {
+    margin: 10rem 0 0 5rem;
+}
+
+.customMargin {
+    margin: 8rem 0 0 5rem;
+}
+
+
+.contactCard {
+    background-color: #0000007f;
+}
+
+.btn.btn-danger {
+    background-color: #ff0000 !important;
+}
+
+.btn.btn-danger:hover {
+    opacity: 0.8;
+}
+
+/* Tom's CSS stuff below */
 canvas{
     position: fixed;
     top: 0;
