@@ -19,6 +19,7 @@ class UploadFileForm(FlaskForm):
     submit = SubmitField("Upload Floor Plan")
 
 print("Server is online at localhost:8000")
+print("Press ctrl+c to stop the server.")
 
 @app.route('/')
 @app.route('/home')
