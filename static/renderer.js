@@ -96,6 +96,14 @@ let startY;
 
 // GUI
 const gui = new GUI();
+// ERTIE GUI
+let homeButtonParams = {
+    returnToHomePage: function () {
+        window.location.href = "/home"
+    }
+}
+const ertieGUI = gui.addFolder('E.R.T.I.E.')
+ertieGUI.add(homeButtonParams, "returnToHomePage").name("Return to homepage");
 // Pathfinding GUI
 const pathfindingGUI = gui.addFolder('Pathfinding')
 let pathfindingParams = {
@@ -152,9 +160,9 @@ pathfindingGUI
         }
     )
 pathfindingGUI.add(clearPathButtonParams, "clearPath").name("Clear path");
-    // Camera GUI
+// Camera GUI
 let cameraParams = {
-    resetCamera:function(){
+    resetCamera: function(){
         controls.reset();
         activeCamera = camera;
     }
