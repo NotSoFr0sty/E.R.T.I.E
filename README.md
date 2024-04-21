@@ -8,4 +8,4 @@ _________________________________________________
 
 Tips: 
 Open the project folder in a code editor like VS Code. This way, opening the terminal (ctrl + `) should navigate to the project directory automatically. This is where commands should be run.
-To stop the server: press ctrl + c (in most terminals) to terminate a program.
+To stop the server: press ctrl + c (terminates the running program in most terminals)
